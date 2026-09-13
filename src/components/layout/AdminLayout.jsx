@@ -10,6 +10,10 @@ import {
   X,
   Shield,
   Activity,
+  GitBranch,
+  HelpCircle,
+  Layers,
+  Bot,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAuth } from '../../contexts/AuthContext';
@@ -17,9 +21,14 @@ import { useToast } from '../../contexts/ToastContext';
 
 const navItems = [
   { to: '/admin', label: 'نظرة عامة', icon: LayoutDashboard, end: true },
+  { to: '/admin/statistics', label: 'الإحصائيات', icon: BarChart3 },
   { to: '/admin/users', label: 'المستخدمون', icon: Users },
   { to: '/admin/assessments', label: 'التقييمات', icon: ClipboardList },
-  { to: '/admin/analytics', label: 'تحليلات المحاور', icon: BarChart3 },
+  { to: '/admin/analytics', label: 'تحليلات المحاور', icon: Activity },
+  { to: '/admin/axes', label: 'المحاور', icon: Layers },
+  { to: '/admin/questions', label: 'الأسئلة', icon: HelpCircle },
+  { to: '/admin/assessment-versions', label: 'إصدارات الاستبيان', icon: GitBranch },
+  { to: '/admin/ai-analyses', label: 'مراجعة الذكاء الاصطناعي', icon: Bot },
 ];
 
 function NavItem({ to, label, icon: Icon, end, onClick }) {

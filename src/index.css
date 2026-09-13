@@ -8,6 +8,8 @@
 @layer base {
   :root {
     color-scheme: light;
+    --paper: #f7f7f4;
+    --ink: #10131c;
   }
 
   html.dark {
@@ -17,11 +19,19 @@
   html {
     font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    @apply text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    background-color: var(--paper);
     font-feature-settings: 'kern';
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display typography: headings opt into the editorial face */
+  h1, h2, h3 {
+    font-family: 'Alexandria', 'Cairo', sans-serif;
   }
 
   /* RTL scrollbar polish */
@@ -37,6 +47,10 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-400;
+  }
+
+  ::selection {
+    @apply bg-brand-600/90 text-white;
   }
 }
 
@@ -122,6 +136,80 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* --- European editorial polish --- */
+  .font-wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-feature-settings: 'ss01';
+    letter-spacing: -0.02em;
+  }
+
+  .card-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lift;
+  }
+
+  .kicker {
+    @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em];
+  }
+
+  .hairline {
+    @apply border-slate-200/80;
+  }
+
+  /* Decorative dotted grid used on hero sections */
+  .bg-grid-dots {
+    background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* --- Scroll-reveal (IntersectionObserver adds .is-visible) --- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .animate-float-slow,
+    .animate-logo-ring,
+    .animate-shimmer {
+      animation: none;
+    }
+  }
+
+  /* --- Splash screen --- */
+  .splash-shimmer {
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   /* Leaflet map fills its parent */

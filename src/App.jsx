@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { ProtectedRoute, GuestRoute } from './components/layout/ProtectedRoute';
 import { FullPageSpinner } from './components/ui/Spinner';
+import SplashScreen from './components/SplashScreen';
 import { useAuth } from './contexts/AuthContext';
 
 // Auth pages
@@ -18,6 +19,8 @@ import Landing from './pages/Landing';
 import Dashboard from './pages/user/Dashboard';
 import Assessment from './pages/user/Assessment';
 import AssessmentResults from './pages/user/AssessmentResults';
+import AssessmentHistory from './pages/user/AssessmentHistory';
+import CompareResults from './pages/user/CompareResults';
 import History from './pages/user/History';
 import Profile from './pages/user/Profile';
 import Notifications from './pages/user/Notifications';
@@ -31,6 +34,11 @@ import AdminUsers from './pages/admin/AdminUsers';
 import AdminAssessments from './pages/admin/AdminAssessments';
 import AdminAssessmentDetail from './pages/admin/AdminAssessmentDetail';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminStatistics from './pages/admin/AdminStatistics';
+import AdminAxes from './pages/admin/AdminAxes';
+import AdminQuestions from './pages/admin/AdminQuestions';
+import AdminAssessmentVersions from './pages/admin/AdminAssessmentVersions';
+import AdminAiAnalyses from './pages/admin/AdminAiAnalyses';
 
 function NotFound() {
   return (
@@ -57,7 +65,9 @@ function RootRedirect() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <SplashScreen />
+      <Routes>
       {/* Public root */}
       <Route path="/" element={<RootRedirect />} />
 
@@ -112,6 +122,24 @@ export default function App() {
         element={
           <ProtectedRoute>
             <History />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Assessment history + comparison */}
+      <Route
+        path="/dashboard/assessments"
+        element={
+          <ProtectedRoute>
+            <AssessmentHistory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/assessments/compare"
+        element={
+          <ProtectedRoute>
+            <CompareResults />
           </ProtectedRoute>
         }
       />
@@ -197,8 +225,49 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/statistics"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminStatistics />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/axes"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminAxes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/questions"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminQuestions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/assessment-versions"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminAssessmentVersions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/ai-analyses"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminAiAnalyses />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<NotFound />} />
-    </Routes>
+      </Routes>
+    </>
   );
 }

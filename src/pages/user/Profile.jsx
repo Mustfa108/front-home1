@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Building2, Mail, ShieldCheck, User as UserIcon, Globe, Moon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
 import { authApi } from '../../api/auth';
+import { organizationApi, ORG_TYPES, ORG_SIZES } from '../../api/organization';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { PageContainer, PageHeader } from '../../components/layout/Navbar';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
@@ -30,6 +31,64 @@ export default function Profile() {
 
   // Resend verification
   const [resending, setResending] = useState(false);
+
+  // Organization profile form
+  const [orgForm, setOrgForm] = useState({
+    org_type: '',
+    org_size: '',
+    team_member_count: '',
+  });
+  const [orgErrors, setOrgErrors] = useState({});
+  const [orgLoading, setOrgLoading] = useState(true);
+  const [orgSubmitting, setOrgSubmitting] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    organizationApi
+      .show()
+      .then((res) => {
+        if (!mounted) return;
+        setOrgForm({
+          org_type: res.data?.org_type || '',
+          org_size: res.data?.org_size || '',
+          team_member_count: res.data?.team_member_count || '',
+        });
+      })
+      .catch(() => {})
+      .finally(() => mounted && setOrgLoading(false));
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleOrgSubmit = async (e) => {
+    e.preventDefault();
+    setOrgErrors({});
+    if (!orgForm.org_type || !orgForm.org_size) {
+      setOrgErrors({
+        org_type: !orgForm.org_type ? ['نوع المنظمة مطلوب.'] : undefined,
+        org_size: !orgForm.org_size ? ['حجم المنظمة مطلوب.'] : undefined,
+      });
+      return;
+    }
+    setOrgSubmitting(true);
+    try {
+      await organizationApi.update({
+        org_type: orgForm.org_type,
+        org_size: orgForm.org_size,
+        team_member_count: orgForm.team_member_count
+          ? Number(orgForm.team_member_count)
+          : undefined,
+      });
+      toast.success('تم حفظ بيانات المنظمة بنجاح. ستُستخدم لتخصيص التوصيات.');
+      refreshUser?.();
+    } catch (err) {
+      if (err?.errors) setOrgErrors(err.errors);
+      toast.error(err?.message || 'تعذّر حفظ بيانات المنظمة.');
+    } finally {
+      setOrgSubmitting(false);
+    }
+  };
 
   const handleChangePw = async (e) => {
     e.preventDefault();
@@ -127,6 +186,72 @@ export default function Profile() {
         </Card>
 
         <div className="space-y-5 lg:col-span-2">
+          <Card>
+            <CardHeader title="ملف المنظمة" subtitle="تُستخدم هذه البيانات لتخصيص التوصيات الذكية" />
+            <CardBody>
+              {orgLoading ? (
+                <p className="text-sm text-slate-500">جاري تحميل بيانات المنظمة…</p>
+              ) : (
+                <form onSubmit={handleOrgSubmit} className="space-y-4" noValidate>
+                  <div>
+                    <label className="label">نوع المنظمة <span className="text-red-500">*</span></label>
+                    <select
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-brand-500 focus:outline-none"
+                      value={orgForm.org_type}
+                      onChange={(e) => setOrgForm((f) => ({ ...f, org_type: e.target.value }))}
+                    >
+                      <option value="">اختر نوع المنظمة…</option>
+                      {ORG_TYPES.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.labelAr}
+                        </option>
+                      ))}
+                    </select>
+                    {orgErrors.org_type && (
+                      <p className="mt-1 text-xs text-red-600">{orgErrors.org_type[0]}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="label">حجم المنظمة <span className="text-red-500">*</span></label>
+                    <div className="flex flex-wrap gap-2">
+                      {ORG_SIZES.map((size) => (
+                        <Button
+                          key={size.value}
+                          type="button"
+                          variant={orgForm.org_size === size.value ? 'primary' : 'secondary'}
+                          onClick={() => setOrgForm((f) => ({ ...f, org_size: size.value }))}
+                        >
+                          {size.labelAr}
+                        </Button>
+                      ))}
+                    </div>
+                    {orgErrors.org_size && (
+                      <p className="mt-1 text-xs text-red-600">{orgErrors.org_size[0]}</p>
+                    )}
+                  </div>
+
+                  <Input
+                    name="team_member_count"
+                    type="number"
+                    min="1"
+                    label="عدد أعضاء الفريق"
+                    hint="مطلوب لتحديد حجم المنظمة الصغيرة أو المتوسطة"
+                    value={orgForm.team_member_count}
+                    onChange={(e) =>
+                      setOrgForm((f) => ({ ...f, team_member_count: e.target.value }))
+                    }
+                    error={orgErrors.team_member_count?.[0]}
+                  />
+
+                  <Button type="submit" loading={orgSubmitting}>
+                    حفظ بيانات المنظمة
+                  </Button>
+                </form>
+              )}
+            </CardBody>
+          </Card>
+
           <Card>
             <CardHeader title={t('profile.preferences')} />
             <CardBody className="space-y-4">

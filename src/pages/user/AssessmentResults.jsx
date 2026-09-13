@@ -24,6 +24,7 @@ import { PageContainer, PageHeader } from '../../components/layout/Navbar';
 import { PillarRadarChart } from '../../components/charts/PillarRadarChart';
 import { PillarBarChart } from '../../components/charts/PillarBarChart';
 import { ActionPlanView } from '../../components/assessment/ActionPlanView';
+import { AiAnalysisSection, AiChatWidget } from '../../components/ai/AiAnalysisSection';
 import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { ReadinessBadge } from '../../components/ui/Badge';
@@ -258,6 +259,12 @@ export default function AssessmentResults() {
           </div>
         </CardBody>
       </Card>
+
+      {/* AI analysis + context-bound chat */}
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+        <AiAnalysisSection assessmentId={assessment.id} />
+        <AiChatWidget assessmentId={assessment.id} />
+      </div>
 
       {/* Action plan */}
       <div className="mt-6">
