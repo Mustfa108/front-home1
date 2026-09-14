@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT — HumaScale Frontend (`front-home1`)
 
-**Last Updated:** 2026-09-13
+**Last Updated:** 2026-09-14
 
 ## Overview
 
@@ -18,7 +18,7 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 | Path | Purpose |
 |------|---------|
 | `/assessment` | Questionnaire (Likert or Yes/No) |
-| `/assessment/:id/results` | Results + AI + PDF |
+| `/assessment/:id/results` | Results + AI + PDF (regenerate supported) |
 | `/project-review` | AI project review + map pin claim |
 | `/expansion` | Projects map + expansion areas |
 | `/chat` | Community chat (all users) |
@@ -31,8 +31,8 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 - SiteFooter with admin-managed social links on all pages
 - Community chat via Echo/Reverb
 - Project map claiming (claimed pins visible to all)
-- PDF polling capped to avoid endless refresh
-- Project review shows full summary, features, ideal steps + map picker
+- PDF: blob error handling + «تجهيز PDF» regenerate button
+- Project review shows full summary, goals, features, how-it-works, ideal steps + map picker
 
 ## Env required
 

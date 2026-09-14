@@ -292,6 +292,8 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
   const recommendations = review.recommendations || [];
   const kpis = review.kpis || [];
   const features = review.features || [];
+  const goals = review.goals || [];
+  const howItWorks = review.how_it_works || [];
   const idealSteps = review.ideal_steps || [];
 
   return (
@@ -309,15 +311,29 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
       </div>
 
       <Card>
-        <CardHeader title="الملخص الكامل للمشروع" subtitle="قراءة شاملة بالذكاء الاصطناعي" />
+        <CardHeader title="الملخص الكامل للمشروع" subtitle="شرح مفصّل بالذكاء الاصطناعي بعد إجاباتك" />
         <CardBody>
-          <p className="leading-8 text-slate-700">{review.full_summary || review.ai_summary_ar}</p>
+          <p className="leading-8 text-slate-700 whitespace-pre-line">{review.full_summary || review.ai_summary_ar}</p>
         </CardBody>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
         <Card>
-          <CardHeader title="ميزات المشروع المتوقعة" action={<Star size={16} className="text-brand-600" />} />
+          <CardHeader title="أهداف المشروع" action={<Target size={16} className="text-brand-600" />} />
+          <CardBody>
+            <ul className="space-y-2 text-sm text-slate-700">
+              {goals.length === 0 && <li className="text-slate-500">لا توجد أهداف مُولَّدة بعد.</li>}
+              {goals.map((item, index) => (
+                <li key={`${item}-${index}`} className="flex gap-2 rounded-xl bg-teal-50/80 px-3 py-2">
+                  <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-teal-600" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardHeader title="ميزات المشروع" action={<Star size={16} className="text-brand-600" />} />
           <CardBody>
             <ul className="space-y-2 text-sm text-slate-700">
               {features.length === 0 && <li className="text-slate-500">لا توجد ميزات مُولَّدة بعد.</li>}
@@ -331,13 +347,13 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title="الخطوات المثالية" action={<ListOrdered size={16} className="text-brand-600" />} />
+          <CardHeader title="كيف يعمل المشروع" action={<ListOrdered size={16} className="text-brand-600" />} />
           <CardBody>
             <ol className="space-y-3">
-              {idealSteps.length === 0 && <li className="text-sm text-slate-500">لا توجد خطوات مُولَّدة بعد.</li>}
-              {idealSteps.map((item, index) => (
+              {howItWorks.length === 0 && <li className="text-sm text-slate-500">لا توجد آلية عمل مُولَّدة بعد.</li>}
+              {howItWorks.map((item, index) => (
                 <li key={`${item}-${index}`} className="flex gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">{index + 1}</span>
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-sm font-bold text-indigo-700">{index + 1}</span>
                   <span className="pt-1 text-sm leading-6 text-slate-700">{item}</span>
                 </li>
               ))}
@@ -345,6 +361,21 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
           </CardBody>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader title="الخطوات المثالية" action={<ListOrdered size={16} className="text-brand-600" />} />
+        <CardBody>
+          <ol className="space-y-3">
+            {idealSteps.length === 0 && <li className="text-sm text-slate-500">لا توجد خطوات مُولَّدة بعد.</li>}
+            {idealSteps.map((item, index) => (
+              <li key={`${item}-${index}`} className="flex gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">{index + 1}</span>
+                <span className="pt-1 text-sm leading-6 text-slate-700">{item}</span>
+              </li>
+            ))}
+          </ol>
+        </CardBody>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.85fr)]">
         <Card>

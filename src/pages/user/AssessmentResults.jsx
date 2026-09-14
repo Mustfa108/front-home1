@@ -15,7 +15,7 @@ import { useAsync } from '../../hooks/useAsync';
 import { useToast } from '../../contexts/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { assessmentApi } from '../../api/assessment';
-import { downloadReport } from '../../api/report';
+import { downloadReport, reportApi } from '../../api/report';
 import { readinessFromKey, readinessFromScore } from '../../utils/constants';
 import { formatDate, formatScore } from '../../utils/format';
 import { pillarLabel } from '../../utils/locale';
@@ -65,6 +65,8 @@ export default function AssessmentResults() {
     { deps: [id] },
   );
 
+  const [regeneratingPdf, setRegeneratingPdf] = useState(false);
+
   const bothReady = data?.assessment?.ai_ready && data?.assessment?.pdf_ready;
   const { exhausted } = useAutoRefresh(bothReady, refresh);
 
@@ -100,6 +102,19 @@ export default function AssessmentResults() {
     }
   };
 
+  const handleRegeneratePdf = async () => {
+    setRegeneratingPdf(true);
+    try {
+      await reportApi.regenerate(assessment.id);
+      toast.success(locale === 'en' ? 'PDF is ready.' : 'تم تجهيز ملف PDF.');
+      refresh();
+    } catch (err) {
+      toast.error(err?.message || 'تعذّر إعادة تجهيز PDF.');
+    } finally {
+      setRegeneratingPdf(false);
+    }
+  };
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -132,14 +147,19 @@ export default function AssessmentResults() {
               {locale === 'en' ? 'Share' : 'مشاركة'}
             </Button>
             <Button
-              onClick={handleDownload}
-              disabled={!assessment.pdf_ready}
-              leftIcon={assessment.pdf_ready ? <FileDown size={16} /> : <Loader2 size={16} className="animate-spin" />}
+              onClick={assessment.pdf_ready ? handleDownload : handleRegeneratePdf}
+              disabled={regeneratingPdf}
+              loading={regeneratingPdf}
+              leftIcon={
+                regeneratingPdf || (!assessment.pdf_ready && !exhausted)
+                  ? <Loader2 size={16} className="animate-spin" />
+                  : <FileDown size={16} />
+              }
             >
               {assessment.pdf_ready
                 ? t('results.pdf')
-                : exhausted
-                  ? (locale === 'en' ? 'PDF delayed — retry' : 'تأخر PDF — أعد المحاولة')
+                : exhausted || regeneratingPdf
+                  ? (locale === 'en' ? 'Prepare PDF' : 'تجهيز PDF')
                   : t('results.pdfPending')}
             </Button>
           </div>
@@ -151,12 +171,19 @@ export default function AssessmentResults() {
           <CardBody>
             <p className="text-sm text-amber-800 dark:text-amber-200">
               {locale === 'en'
-                ? 'AI or PDF generation is taking longer than expected. You can keep browsing — refresh manually or check that the queue worker is running.'
-                : 'توليد الذكاء الاصطناعي أو ملف PDF يستغرق وقتًا أطول من المتوقع. يمكنك المتابعة وتحديث الصفحة يدويًا، وتأكد من تشغيل عامل الطابور على الخادم.'}
+                ? 'AI or PDF generation is taking longer than expected. You can refresh or regenerate the PDF from the button above.'
+                : 'توليد الذكاء الاصطناعي أو ملف PDF يستغرق وقتًا أطول من المتوقع. يمكنك التحديث أو الضغط على «تجهيز PDF».'}
             </p>
-            <Button className="mt-3" variant="secondary" onClick={refresh} leftIcon={<RefreshCw size={16} />}>
-              {locale === 'en' ? 'Refresh now' : 'تحديث الآن'}
-            </Button>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button variant="secondary" onClick={refresh} leftIcon={<RefreshCw size={16} />}>
+                {locale === 'en' ? 'Refresh now' : 'تحديث الآن'}
+              </Button>
+              {!assessment.pdf_ready && (
+                <Button onClick={handleRegeneratePdf} loading={regeneratingPdf} leftIcon={<FileDown size={16} />}>
+                  {locale === 'en' ? 'Regenerate PDF' : 'إعادة تجهيز PDF'}
+                </Button>
+              )}
+            </div>
           </CardBody>
         </Card>
       )}
