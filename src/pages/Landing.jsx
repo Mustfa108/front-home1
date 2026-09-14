@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import Reveal from '../components/Reveal';
+import { SiteFooter } from '../components/layout/SiteFooter';
 
 export default function Landing() {
   useDocumentTitle('الرئيسية');
@@ -433,24 +434,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/80 bg-white/70 py-10 dark:border-slate-800 dark:bg-slate-900/50">
-        <div className="container-page flex flex-col items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400 sm:flex-row">
-          <p className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-brand-500 to-brand-700 text-white">
-              <Activity size={13} />
-            </span>
-            © {new Date().getFullYear()} HumaScale. جميع الحقوق محفوظة.
-          </p>
-          <div className="flex items-center gap-4">
-            <Link to="/login" className="hover:text-slate-700 dark:hover:text-slate-200">
-              تسجيل الدخول
-            </Link>
-            <Link to="/register" className="hover:text-slate-700 dark:hover:text-slate-200">
-              إنشاء حساب
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
   Sun,
   Monitor,
   Sparkles,
+  MessageCircle,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,6 +26,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useAsync } from '../../hooks/useAsync';
 import { notificationApi } from '../../api/notification';
+import { SiteFooter } from './SiteFooter';
 
 function useNavItems() {
   const { t } = useLanguage();
@@ -33,7 +35,8 @@ function useNavItems() {
     { to: '/assessment', label: t('nav.assessment'), icon: ClipboardList },
     { to: '/history', label: t('nav.history'), icon: HistoryIcon },
     { to: '/expansion', label: t('nav.expansion'), icon: MapPin },
-    { to: '/project-review', label: 'تقييم مشروع ذكي', icon: Sparkles },
+    { to: '/project-review', label: 'تقييم مشروع', icon: Sparkles },
+    { to: '/chat', label: 'دردشة المجتمع', icon: MessageCircle },
   ];
 }
 
@@ -240,11 +243,12 @@ export function Navbar() {
   );
 }
 
-export function PageContainer({ children, className = '' }) {
+export function PageContainer({ children, className = '', withFooter = true }) {
   return (
-    <div className={clsx('min-h-screen bg-slate-50 dark:bg-slate-950', className)}>
+    <div className={clsx('min-h-screen bg-gradient-to-b from-slate-50 via-white to-brand-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900', className)}>
       <Navbar />
       <main className="container-page py-6 md:py-10">{children}</main>
+      {withFooter && <SiteFooter />}
     </div>
   );
 }

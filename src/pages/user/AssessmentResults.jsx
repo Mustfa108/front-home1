@@ -31,15 +31,27 @@ import { ReadinessBadge } from '../../components/ui/Badge';
 import { FullPageSpinner, InlineSpinner } from '../../components/ui/Spinner';
 
 /**
- * Auto-refresh the page every 8s while AI or PDF are still being generated.
- * Stops as soon as both are ready.
+ * Auto-refresh while AI or PDF are still generating.
+ * Stops when ready, or after maxAttempts to avoid an endless loop.
  */
-function useAutoRefresh(ready, refresh, intervalMs = 8000) {
+function useAutoRefresh(ready, refresh, { intervalMs = 8000, maxAttempts = 20 } = {}) {
+  const [attempts, setAttempts] = useState(0);
+  const exhausted = attempts >= maxAttempts;
+
   useEffect(() => {
-    if (ready) return;
-    const id = setInterval(refresh, intervalMs);
+    if (ready || exhausted) return undefined;
+    const id = setInterval(() => {
+      setAttempts((n) => n + 1);
+      refresh();
+    }, intervalMs);
     return () => clearInterval(id);
-  }, [ready, refresh, intervalMs]);
+  }, [ready, exhausted, refresh, intervalMs]);
+
+  useEffect(() => {
+    setAttempts(0);
+  }, [refresh]);
+
+  return { exhausted, attempts, maxAttempts };
 }
 
 export default function AssessmentResults() {
@@ -54,7 +66,7 @@ export default function AssessmentResults() {
   );
 
   const bothReady = data?.assessment?.ai_ready && data?.assessment?.pdf_ready;
-  useAutoRefresh(bothReady, refresh);
+  const { exhausted } = useAutoRefresh(bothReady, refresh);
 
   if (loading && !data) return <FullPageSpinner />;
   if (error) {
@@ -124,11 +136,30 @@ export default function AssessmentResults() {
               disabled={!assessment.pdf_ready}
               leftIcon={assessment.pdf_ready ? <FileDown size={16} /> : <Loader2 size={16} className="animate-spin" />}
             >
-              {assessment.pdf_ready ? t('results.pdf') : t('results.pdfPending')}
+              {assessment.pdf_ready
+                ? t('results.pdf')
+                : exhausted
+                  ? (locale === 'en' ? 'PDF delayed — retry' : 'تأخر PDF — أعد المحاولة')
+                  : t('results.pdfPending')}
             </Button>
           </div>
         }
       />
+
+      {exhausted && !bothReady && (
+        <Card className="mb-5 border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/40">
+          <CardBody>
+            <p className="text-sm text-amber-800 dark:text-amber-200">
+              {locale === 'en'
+                ? 'AI or PDF generation is taking longer than expected. You can keep browsing — refresh manually or check that the queue worker is running.'
+                : 'توليد الذكاء الاصطناعي أو ملف PDF يستغرق وقتًا أطول من المتوقع. يمكنك المتابعة وتحديث الصفحة يدويًا، وتأكد من تشغيل عامل الطابور على الخادم.'}
+            </p>
+            <Button className="mt-3" variant="secondary" onClick={refresh} leftIcon={<RefreshCw size={16} />}>
+              {locale === 'en' ? 'Refresh now' : 'تحديث الآن'}
+            </Button>
+          </CardBody>
+        </Card>
+      )}
 
       {/* Score summary */}
       <Card>
@@ -285,11 +316,19 @@ export default function AssessmentResults() {
         )}
       </div>
 
-      <div className="mt-8 flex flex-col items-center justify-center gap-3 text-center">
-        <p className="text-sm text-slate-500">هل تريد إعادة التقييم؟</p>
+      <div className="mt-8 flex flex-col items-center justify-center gap-3 text-center sm:flex-row sm:gap-4">
         <Link to="/assessment" className="btn-primary">
           تقييم جديد
           <ArrowLeft size={16} />
+        </Link>
+        <Link to="/project-review" className="btn-secondary">
+          تقييم مشروع ذكي
+        </Link>
+        <Link to="/expansion" className="btn-secondary">
+          خريطة المشاريع
+        </Link>
+        <Link to="/chat" className="btn-secondary">
+          دردشة المجتمع
         </Link>
       </div>
     </PageContainer>

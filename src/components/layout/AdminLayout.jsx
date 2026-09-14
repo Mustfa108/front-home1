@@ -14,10 +14,13 @@ import {
   HelpCircle,
   Layers,
   Bot,
+  Settings,
+  MessageCircle,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
+import { SiteFooter } from './SiteFooter';
 
 const navItems = [
   { to: '/admin', label: 'نظرة عامة', icon: LayoutDashboard, end: true },
@@ -29,6 +32,8 @@ const navItems = [
   { to: '/admin/questions', label: 'الأسئلة', icon: HelpCircle },
   { to: '/admin/assessment-versions', label: 'إصدارات الاستبيان', icon: GitBranch },
   { to: '/admin/ai-analyses', label: 'مراجعة الذكاء الاصطناعي', icon: Bot },
+  { to: '/admin/community-chat', label: 'دردشة المجتمع', icon: MessageCircle },
+  { to: '/admin/settings', label: 'إعدادات المنصة', icon: Settings },
 ];
 
 function NavItem({ to, label, icon: Icon, end, onClick }) {
@@ -167,6 +172,7 @@ export function AdminLayout({ children }) {
           </h2>
         </header>
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
+        <SiteFooter className="border-t border-slate-200 bg-white" />
       </div>
     </div>
   );

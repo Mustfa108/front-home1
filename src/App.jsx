@@ -26,6 +26,7 @@ import Profile from './pages/user/Profile';
 import Notifications from './pages/user/Notifications';
 import ExpansionMap from './pages/user/ExpansionMap';
 import ProjectReview from './pages/user/ProjectReview';
+import CommunityChat from './pages/user/CommunityChat';
 
 // Admin pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -39,6 +40,8 @@ import AdminAxes from './pages/admin/AdminAxes';
 import AdminQuestions from './pages/admin/AdminQuestions';
 import AdminAssessmentVersions from './pages/admin/AdminAssessmentVersions';
 import AdminAiAnalyses from './pages/admin/AdminAiAnalyses';
+import AdminSettings from './pages/admin/AdminSettings';
+import AdminCommunityChat from './pages/admin/AdminCommunityChat';
 
 function NotFound() {
   return (
@@ -175,6 +178,14 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <CommunityChat />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Admin (protected with requireAdmin) */}
       <Route
@@ -262,6 +273,22 @@ export default function App() {
         element={
           <ProtectedRoute requireAdmin>
             <AdminAiAnalyses />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminSettings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/community-chat"
+        element={
+          <ProtectedRoute requireAdmin>
+            <AdminCommunityChat />
           </ProtectedRoute>
         }
       />

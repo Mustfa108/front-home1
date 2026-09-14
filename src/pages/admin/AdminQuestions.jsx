@@ -36,7 +36,7 @@ export default function AdminQuestions() {
   const versionId = data?.questions?.version?.id;
 
   const openCreate = () => {
-    setForm({ pillar_id: '', text_ar: '', display_order: questions.length + 1, weight: '' });
+    setForm({ pillar_id: '', text_ar: '', display_order: questions.length + 1, weight: '', answer_type: 'likert' });
     setModal({ mode: 'create' });
   };
 
@@ -46,6 +46,7 @@ export default function AdminQuestions() {
       text_ar: question.text_ar || '',
       display_order: question.display_order,
       weight: question.weight,
+      answer_type: question.answer_type || 'likert',
     });
     setModal({ mode: 'edit', question });
   };
@@ -59,6 +60,7 @@ export default function AdminQuestions() {
         text_ar: form.text_ar,
         display_order: Number(form.display_order),
         weight: Number(form.weight),
+        answer_type: form.answer_type || 'likert',
       };
       if (modal.mode === 'create') {
         await questionsApi.create({ ...payload, version_id: versionId });
@@ -130,7 +132,8 @@ export default function AdminQuestions() {
                       {q.used_in_assessments && <span className="badge-neutral mr-2">مستخدم في تقييمات سابقة</span>}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
-                      المحور: {q.pillar_name_ar} — الترتيب: {q.display_order}
+                      المحور: {q.pillar_name_ar} — الترتيب: {q.display_order} — النوع:{' '}
+                      {(q.answer_type || 'likert') === 'yes_no' ? 'نعم / لا' : 'مقياس Likert'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -165,6 +168,17 @@ export default function AdminQuestions() {
               </select>
             </div>
             <Textarea label="نص السؤال" required value={form.text_ar} onChange={(e) => setForm((f) => ({ ...f, text_ar: e.target.value }))} />
+            <div>
+              <label className="label">نوع الإجابة</label>
+              <select
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+                value={form.answer_type || 'likert'}
+                onChange={(e) => setForm((f) => ({ ...f, answer_type: e.target.value }))}
+              >
+                <option value="likert">مقياس Likert (1–5)</option>
+                <option value="yes_no">نعم / لا</option>
+              </select>
+            </div>
             <Input label="وزن السؤال (%)" type="number" min="0" max="100" step="0.01" required value={form.weight} onChange={(e) => setForm((f) => ({ ...f, weight: e.target.value }))} />
             <Input label="ترتيب العرض" type="number" min="0" required value={form.display_order} onChange={(e) => setForm((f) => ({ ...f, display_order: e.target.value }))} />
             <div className="flex justify-end gap-2">

@@ -160,6 +160,7 @@ export default function Assessment() {
             question={currentQ.text}
             value={answers[currentQ.id]}
             onChange={handleAnswer}
+            answerType={currentQ.answer_type || 'likert'}
           />
 
           <div className="mt-4 flex items-center justify-between">

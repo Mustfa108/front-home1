@@ -60,3 +60,15 @@ export const aiAnalysesApi = {
   review: (id, decision) =>
     adminApi.patch(`/admin/ai-analyses/${id}/review`, { decision }).then((r) => r.data),
 };
+
+export const settingsApi = {
+  getAi: () => adminApi.get('/admin/settings/ai').then((r) => r.data),
+  updateAi: (payload) => adminApi.put('/admin/settings/ai', payload).then((r) => r.data),
+  getSocial: () => adminApi.get('/admin/settings/social').then((r) => r.data),
+  updateSocial: (payload) => adminApi.put('/admin/settings/social', payload).then((r) => r.data),
+};
+
+export const adminCommunityChatApi = {
+  list: () => adminApi.get('/admin/community-chat/messages').then((r) => r.data),
+  send: (body) => adminApi.post('/admin/community-chat/messages', { body }).then((r) => r.data),
+};
