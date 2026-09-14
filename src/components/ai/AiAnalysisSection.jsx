@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Bot, CheckCircle2, RefreshCw, Sparkles, AlertTriangle, Info } from 'lucide-react';
 import { useAsync } from '../../hooks/useAsync';
 import { useToast } from '../../contexts/ToastContext';
@@ -15,6 +16,7 @@ import { InlineSpinner } from '../ui/Spinner';
 export function AiAnalysisSection({ assessmentId }) {
   const toast = useToast();
   const [retrying, setRetrying] = useState(false);
+  const [generateError, setGenerateError] = useState(null);
   const { data, loading, error, refresh, setData } = useAsync(
     () => aiApi.getAnalysis(assessmentId),
     { deps: [assessmentId] },
@@ -26,13 +28,18 @@ export function AiAnalysisSection({ assessmentId }) {
     if (!data.can_generate) return;
     let mounted = true;
     setRetrying(true);
+    setGenerateError(null);
     aiApi
       .generateAnalysis(assessmentId)
       .then((res) => {
         if (mounted) setData(res.data);
       })
       .catch((err) => {
-        if (mounted) toast.error(err?.message || 'تعذر إنشاء التحليل الذكي حالياً، يمكنك المحاولة لاحقاً');
+        if (mounted) {
+          const msg = err?.message || 'تعذر إنشاء التحليل الذكي حالياً، يمكنك المحاولة لاحقاً';
+          setGenerateError(msg);
+          toast.error(msg);
+        }
       })
       .finally(() => mounted && setRetrying(false));
     return () => {
@@ -46,11 +53,14 @@ export function AiAnalysisSection({ assessmentId }) {
 
   const handleRetry = async () => {
     setRetrying(true);
+    setGenerateError(null);
     try {
       const res = await aiApi.generateAnalysis(assessmentId);
       setData(res.data);
     } catch (err) {
-      toast.error(err?.message || 'تعذر إنشاء التحليل الذكي حالياً، يمكنك المحاولة لاحقاً');
+      const msg = err?.message || 'تعذر إنشاء التحليل الذكي حالياً، يمكنك المحاولة لاحقاً';
+      setGenerateError(msg);
+      toast.error(msg);
     } finally {
       setRetrying(false);
     }
@@ -68,13 +78,15 @@ export function AiAnalysisSection({ assessmentId }) {
             <InlineSpinner size="md" className="text-brand-600" />
             <span className="animate-pulse">جاري إنشاء التحليل الذكي… يمكنك ترك الصفحة والعودة لاحقاً.</span>
           </div>
-        ) : error ? (
-          <div className="rounded-xl bg-amber-50 border border-amber-200 p-5 text-sm text-amber-800">
+        ) : error || generateError ? (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
             <div className="flex items-start gap-3">
               <AlertTriangle size={20} className="mt-0.5 shrink-0 text-amber-600" />
               <div>
                 <p className="font-semibold">تعذر إنشاء التحليل الذكي حالياً</p>
-                <p className="mt-1 text-amber-700">يمكنك المحاولة مرة أخرى أو العودة لاحقاً.</p>
+                <p className="mt-1 text-amber-700 dark:text-amber-300">
+                  {generateError || error || 'يمكنك المحاولة مرة أخرى أو العودة لاحقاً.'}
+                </p>
               </div>
             </div>
             <Button variant="secondary" className="mt-4" onClick={handleRetry} loading={retrying} leftIcon={<RefreshCw size={14} />}>
@@ -82,18 +94,23 @@ export function AiAnalysisSection({ assessmentId }) {
             </Button>
           </div>
         ) : data?.status === 'none' ? (
-          <div className="rounded-xl bg-slate-50 border border-slate-200 p-5 text-sm text-slate-600">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/50">
             <div className="flex items-start gap-3">
               <Info size={18} className="mt-0.5 shrink-0 text-slate-500" />
-              <p>يجب إكمال بيانات المنظمة (النوع والحجم) في الملف الشخصي قبل إنشاء التوصيات المخصصة.</p>
+              <div>
+                <p>يجب إكمال بيانات المنظمة (النوع والحجم) في الملف الشخصي قبل إنشاء التوصيات المخصصة.</p>
+                <Link to="/profile?onboarding=1" className="mt-3 inline-flex text-sm font-semibold text-brand-600 hover:underline">
+                  إكمال الملف الشخصي
+                </Link>
+              </div>
             </div>
           </div>
         ) : analysis ? (
           <div className="space-y-6">
             {isFallback && (
-              <div className="flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
+              <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
                 <Info size={14} className="mt-0.5 shrink-0" />
-                هذا تحليل مبسط مبني على قواعد النظام (تعذر الاتصال بخدمة الذكاء الاصطناعي). يمكنك المحاولة لاحقاً للحصول على تحليل موسع.
+                هذا تحليل مبسط مبني على قواعد النظام (تعذر الاتصال بخدمة الذكاء الاصطناعي أو مفتاح Gemini غير مضبوط). يمكنك المحاولة لاحقاً للحصول على تحليل موسع.
               </div>
             )}
 
@@ -244,18 +261,19 @@ export function AiChatWidget({ assessmentId }) {
     }
 
     setSending(true);
-    setMessages((m) => [...m, { role: 'user', content: message }]);
+    const tempId = `local-user-${Date.now()}`;
+    setMessages((m) => [...m, { id: tempId, role: 'user', content: message }]);
     setInput('');
     try {
       const res = await aiApi.chat(assessmentId, message);
       setMessages(res.data?.messages || []);
     } catch (err) {
-      setMessages((m) => m.slice(0, -1));
+      setMessages((m) => m.filter((row) => row.id !== tempId));
       setInput(message);
       toast.error(
         err?.status === 429
           ? 'تم تجاوز الحد المسموح لعدد الرسائل اليوم. حاول غداً.'
-          : 'تعذّر إرسال السؤال حالياً. يرجى المحاولة لاحقاً.',
+          : err?.message || 'تعذّر إرسال السؤال حالياً. تحقق من مفتاح Gemini أو الاتصال.',
       );
     } finally {
       setSending(false);
@@ -286,9 +304,9 @@ export function AiChatWidget({ assessmentId }) {
         )}
 
         <div className="max-h-80 space-y-3 overflow-y-auto rounded-xl bg-slate-50 p-3">
-          {messages.map((m) => (
+          {messages.map((m, index) => (
             <div
-              key={m.id || `${m.role}-${Math.random()}`}
+              key={m.id || `${m.role}-${index}`}
               className={`flex ${m.role === 'user' ? 'justify-start' : 'justify-end'}`}
             >
               <div
@@ -321,7 +339,8 @@ export function AiChatWidget({ assessmentId }) {
           <input
             type="text"
             maxLength={500}
-            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-brand-500 focus:outline-none"
+            autoComplete="off"
+            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             placeholder="اكتب سؤالك عن نتيجتك…"
             value={input}
             onChange={(e) => setInput(e.target.value)}

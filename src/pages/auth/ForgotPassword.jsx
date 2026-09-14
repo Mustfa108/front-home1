@@ -68,6 +68,7 @@ export default function ForgotPassword() {
           name="email"
           label="البريد الإلكتروني"
           placeholder="example@org.com"
+          autoComplete="email"
           required
           value={email}
           onChange={(e) => {

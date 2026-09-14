@@ -26,6 +26,9 @@ import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card
 import { Button } from '../../components/ui/Button';
 import { Input, Textarea } from '../../components/ui/Input';
 import { FullPageSpinner, InlineSpinner } from '../../components/ui/Spinner';
+import { OrgProfileGate } from '../../components/OrgProfileGate';
+import { useAuth } from '../../contexts/AuthContext';
+import { isOrgProfileComplete } from '../../utils/orgProfile';
 import 'leaflet/dist/leaflet.css';
 
 const initialForm = {
@@ -63,6 +66,8 @@ function MapClickPicker({ onPick }) {
 export default function ProjectReview() {
   useDocumentTitle('تقييم مشروع ذكي');
   const toast = useToast();
+  const { user } = useAuth();
+  const orgReady = isOrgProfileComplete(user);
   const [form, setForm] = useState(initialForm);
   const [review, setReview] = useState(null);
   const [creating, setCreating] = useState(false);
@@ -87,6 +92,10 @@ export default function ProjectReview() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!orgReady) {
+      toast.error('أكمل ملف منظمتك (النوع والحجم) قبل تحليل المشروع.');
+      return;
+    }
     setCreating(true);
     try {
       const payload = {
@@ -100,7 +109,11 @@ export default function ProjectReview() {
       setReview(response.data);
       toast.success('اكتمل تحليل المشروع. يمكنك الآن مناقشة النتيجة مع المساعد.');
     } catch (error) {
-      toast.error(error?.message || 'تعذّر تحليل المشروع.');
+      const detail =
+        error?.errors
+          ? Object.values(error.errors).flat().join(' ')
+          : error?.message;
+      toast.error(detail || 'تعذّر تحليل المشروع. تحقق من الاتصال أو مفتاح الذكاء الاصطناعي.');
     } finally {
       setCreating(false);
     }
@@ -139,7 +152,11 @@ export default function ProjectReview() {
       }));
     } catch (error) {
       setChatText(message);
-      toast.error(error?.message || 'تعذّر الاتصال بالمساعد الذكي.');
+      toast.error(
+        error?.status === 429
+          ? 'تم تجاوز الحد اليومي للمساعد. حاول غداً.'
+          : error?.message || 'تعذّر الاتصال بالمساعد الذكي. تحقق من مفتاح Gemini أو إعدادات الشبكة.',
+      );
     } finally {
       setChatLoading(false);
     }
@@ -165,6 +182,8 @@ export default function ProjectReview() {
           </div>
         }
       />
+
+      <OrgProfileGate className="mb-5" />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(330px,0.75fr)]">
         <Card>

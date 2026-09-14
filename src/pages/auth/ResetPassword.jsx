@@ -76,6 +76,7 @@ export default function ResetPassword() {
         <PasswordInput
           name="password"
           label="كلمة المرور الجديدة"
+          autoComplete="new-password"
           required
           value={form.password}
           onChange={handleChange}
@@ -85,6 +86,7 @@ export default function ResetPassword() {
         <PasswordInput
           name="password_confirmation"
           label="تأكيد كلمة المرور"
+          autoComplete="new-password"
           required
           value={form.password_confirmation}
           onChange={handleChange}

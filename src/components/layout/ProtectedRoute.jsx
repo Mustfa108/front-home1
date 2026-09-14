@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { postAuthDestination } from '../../utils/orgProfile';
 import { FullPageSpinner } from '../ui/Spinner';
 
 export function ProtectedRoute({ children, requireAdmin = false }) {
@@ -24,7 +25,7 @@ export function GuestRoute({ children }) {
 
   if (bootstrapping) return <FullPageSpinner />;
 
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to={postAuthDestination(user)} replace />;
   if (admin) return <Navigate to="/admin" replace />;
 
   return children;

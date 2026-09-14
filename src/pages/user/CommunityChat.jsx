@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { MessageCircle, Send, Shield } from 'lucide-react';
+import { MessageCircle, Send, Shield, WifiOff } from 'lucide-react';
 import { communityChatApi } from '../../api/community';
 import { createEcho } from '../../lib/echo';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
@@ -8,7 +8,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import { PageContainer, PageHeader } from '../../components/layout/Navbar';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { FullPageSpinner, InlineSpinner } from '../../components/ui/Spinner';
+import { FullPageSpinner } from '../../components/ui/Spinner';
+
+function describeSendError(err) {
+  if (err?.isCorsError || err?.isNetworkError) {
+    return err.message || 'تعذّر الاتصال بالخادم. غالباً مشكلة CORS أو إعدادات الشبكة.';
+  }
+  if (err?.status === 401) {
+    return 'انتهت جلستك. سجّل الدخول مجدداً ثم أعد الإرسال.';
+  }
+  if (err?.status === 422) {
+    return err.message || 'الرسالة غير صالحة.';
+  }
+  if (err?.status === 429) {
+    return 'تم تجاوز حد الإرسال. حاول بعد قليل.';
+  }
+  return err?.message || 'تعذّر إرسال الرسالة.';
+}
 
 export default function CommunityChat() {
   useDocumentTitle('دردشة المجتمع');
@@ -18,6 +34,7 @@ export default function CommunityChat() {
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const [realtimeOk, setRealtimeOk] = useState(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -26,15 +43,19 @@ export default function CommunityChat() {
       .then((res) => {
         if (!cancelled) setMessages(res.data?.messages || []);
       })
-      .catch((err) => toast.error(err?.message || 'تعذّر تحميل الدردشة.'))
+      .catch((err) => toast.error(describeSendError(err) || 'تعذّر تحميل الدردشة.'))
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [toast]);
 
   useEffect(() => {
     const echo = createEcho('user');
-    if (!echo) return undefined;
+    if (!echo) {
+      setRealtimeOk(false);
+      return undefined;
+    }
 
+    setRealtimeOk(true);
     const channel = echo.private('community-chat');
     channel.listen('.community.message', (payload) => {
       setMessages((prev) => {
@@ -65,7 +86,7 @@ export default function CommunityChat() {
       setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
     } catch (err) {
       setText(body);
-      toast.error(err?.message || 'تعذّر إرسال الرسالة.');
+      toast.error(describeSendError(err));
     } finally {
       setSending(false);
     }
@@ -80,7 +101,25 @@ export default function CommunityChat() {
         subtitle="غرفة واحدة لجميع المستخدمين — يمكن للإدارة المشاهدة والمشاركة أيضاً"
       />
       <Card className="overflow-hidden">
-        <CardHeader title="المحادثة الحية" subtitle="الرسائل تظهر فوراً عند تشغيل Reverb" action={<span className="badge-good"><MessageCircle size={13} /> مجتمع HumaScale</span>} />
+        <CardHeader
+          title="المحادثة الحية"
+          subtitle={
+            realtimeOk === false
+              ? 'الإرسال عبر HTTP متاح. التحديث الفوري يحتاج إعداد Reverb على السيرفر.'
+              : 'الرسائل تظهر فوراً عند تشغيل Reverb'
+          }
+          action={
+            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+              realtimeOk === false
+                ? 'bg-amber-50 text-amber-800 ring-1 ring-amber-200'
+                : 'badge-good'
+            }`}
+            >
+              {realtimeOk === false ? <WifiOff size={13} /> : <MessageCircle size={13} />}
+              {realtimeOk === false ? 'بدون تحديث فوري' : 'مجتمع HumaScale'}
+            </span>
+          }
+        />
         <CardBody>
           <div className="mb-4 max-h-[55vh] space-y-3 overflow-y-auto rounded-2xl bg-slate-50 p-4 dark:bg-slate-950/40">
             {messages.length === 0 && (
@@ -89,20 +128,21 @@ export default function CommunityChat() {
             {messages.map((message) => {
               const mine = !message.is_admin && message.user_id === user?.id;
               return (
-                <div key={message.id} className={`flex ${mine ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${
-                    message.is_admin
-                      ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200'
-                      : mine
-                        ? 'bg-brand-600 text-white'
-                        : 'bg-white text-slate-700 ring-1 ring-slate-100 dark:bg-slate-900 dark:text-slate-200'
-                  }`}
+                <div key={message.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${
+                      message.is_admin
+                        ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-100'
+                        : mine
+                          ? 'bg-brand-600 text-white'
+                          : 'bg-white text-slate-700 ring-1 ring-slate-100 dark:bg-slate-900 dark:text-slate-200'
+                    }`}
                   >
                     <p className="mb-1 flex items-center gap-1 text-[11px] font-bold opacity-80">
                       {message.is_admin && <Shield size={12} />}
                       {message.sender_name}
                     </p>
-                    <p>{message.body}</p>
+                    <p className="whitespace-pre-wrap break-words">{message.body}</p>
                   </div>
                 </div>
               );
@@ -116,12 +156,13 @@ export default function CommunityChat() {
               onChange={(e) => setText(e.target.value)}
               placeholder="اكتب رسالة للمجتمع..."
               maxLength={2000}
+              autoComplete="off"
+              name="community-message"
             />
             <Button type="submit" loading={sending} className="shrink-0" leftIcon={<Send size={16} />}>
               إرسال
             </Button>
           </form>
-          {sending && <div className="mt-2"><InlineSpinner label="جارٍ الإرسال…" /></div>}
         </CardBody>
       </Card>
     </PageContainer>

@@ -5,6 +5,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { Button } from '../../components/ui/Button';
 import { Input, PasswordInput } from '../../components/ui/Input';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import { postAuthDestination } from '../../utils/orgProfile';
 import { AuthLayout } from './AuthLayout';
 
 export default function Register() {
@@ -33,9 +34,9 @@ export default function Register() {
     setSubmitting(true);
     setErrors({});
     try {
-      await register(form);
+      const profile = await register(form);
       toast.success('تم إنشاء حسابك وتسجيل دخولك بنجاح!');
-      navigate('/dashboard', { replace: true });
+      navigate(postAuthDestination(profile), { replace: true });
     } catch (err) {
       if (err?.errors) setErrors(err.errors);
       toast.error(err?.message || 'تعذّر إنشاء الحساب.');
@@ -54,6 +55,7 @@ export default function Register() {
           name="name"
           label="الاسم الكامل"
           placeholder="مثال: محمد الأحمدي"
+          autoComplete="name"
           required
           value={form.name}
           onChange={handleChange}
@@ -74,6 +76,7 @@ export default function Register() {
           name="organization_name"
           label="اسم المنظمة (اختياري)"
           placeholder="مثال: مؤسسة بناء"
+          autoComplete="organization"
           value={form.organization_name}
           onChange={handleChange}
           error={errors.organization_name?.[0]}

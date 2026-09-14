@@ -14,6 +14,7 @@ import { QuestionCard } from '../../components/assessment/QuestionCard';
 import { AssessmentProgress } from '../../components/assessment/AssessmentProgress';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { pickLocale } from '../../utils/locale';
+import { OrgProfileGate } from '../../components/OrgProfileGate';
 
 export default function Assessment() {
   const { locale, t } = useLanguage();
@@ -150,6 +151,8 @@ export default function Assessment() {
         title={t('assessment.title')}
         subtitle={t('assessment.subtitle')}
       />
+
+      <OrgProfileGate className="mb-5" />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">

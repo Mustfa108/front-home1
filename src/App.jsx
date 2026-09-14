@@ -4,6 +4,7 @@ import { ProtectedRoute, GuestRoute } from './components/layout/ProtectedRoute';
 import { FullPageSpinner } from './components/ui/Spinner';
 import SplashScreen from './components/SplashScreen';
 import { useAuth } from './contexts/AuthContext';
+import { postAuthDestination } from './utils/orgProfile';
 
 // Auth pages
 import Login from './pages/auth/Login';
@@ -62,7 +63,7 @@ function RootRedirect() {
   const { user, admin, bootstrapping } = useAuth();
   if (bootstrapping) return <FullPageSpinner />;
   if (admin) return <Navigate to="/admin" replace />;
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to={postAuthDestination(user)} replace />;
   return <Landing />;
 }
 

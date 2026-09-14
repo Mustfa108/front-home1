@@ -5,12 +5,12 @@ import { useToast } from '../../contexts/ToastContext';
 import { Button } from '../../components/ui/Button';
 import { Input, PasswordInput } from '../../components/ui/Input';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
+import { postAuthDestination } from '../../utils/orgProfile';
 import { AuthLayout } from './AuthLayout';
 
 export default function Login() {
   useDocumentTitle('تسجيل الدخول');
-  
-  // استخدم useNavigate لتوجيه المستخدم داخل React Router
+
   const navigate = useNavigate();
   const { login } = useAuth();
   const toast = useToast();
@@ -29,20 +29,10 @@ export default function Login() {
     setSubmitting(true);
     setErrors({});
     try {
-      // تسجيل الدخول
-      await login(form.email, form.password);
-      
+      const profile = await login(form.email, form.password);
       toast.success('مرحباً بك مجدداً!');
-
-      console.log('✅ تم تسجيل الدخول بنجاح. جارٍ التوجيه إلى /dashboard...');
-      
-      // === الحل الاحترافي ===
-      // نستخدم navigate بدلاً من window.location
-      // replace: true تمنع المستخدم من العودة لصفحة تسجيل الدخول بالزر الخلفي
-      navigate('/dashboard', { replace: true });
-      
+      navigate(postAuthDestination(profile), { replace: true });
     } catch (err) {
-      console.error('❌ خطأ في تسجيل الدخول:', err);
       if (err?.errors) setErrors(err.errors);
       toast.error(err?.message || 'تعذّر تسجيل الدخول. تحقق من بياناتك.');
     } finally {

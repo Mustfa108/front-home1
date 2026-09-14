@@ -49,12 +49,17 @@ export function createApiClient(actor = 'user') {
   client.interceptors.response.use(
     (response) => response,
     (error) => {
-      // Network error
+      // Network error (offline, CORS blocked, DNS, etc.)
       if (!error.response) {
+        const looksCors =
+          typeof error.message === 'string' &&
+          /network error|cors|failed to fetch|access-control/i.test(error.message);
         return Promise.reject({
-          message:
-            'تعذّر الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.',
+          message: looksCors
+            ? 'تعذّر الاتصال بالخادم (قد تكون مشكلة CORS أو إعدادات الشبكة). تأكد من FRONTEND_URL على الباك إند.'
+            : 'تعذّر الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.',
           isNetworkError: true,
+          isCorsError: looksCors,
         });
       }
 

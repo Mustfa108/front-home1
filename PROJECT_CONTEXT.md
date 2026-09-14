@@ -22,17 +22,18 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 | `/project-review` | AI project review + map pin claim |
 | `/expansion` | Projects map + expansion areas |
 | `/chat` | Community chat (all users) |
+| `/profile?onboarding=1` | Org onboarding after login when incomplete |
 | `/admin/settings` | Gemini key + social links |
 | `/admin/community-chat` | Admin view of community chat |
 
 ## Recent major changes
 
-- Yes/No answer UI per question `answer_type`
-- SiteFooter with admin-managed social links on all pages
-- Community chat via Echo/Reverb
-- Project map claiming (claimed pins visible to all)
-- PDF: blob error handling + «تجهيز PDF» regenerate button
-- Project review shows full summary, goals, features, how-it-works, ideal steps + map picker
+- Post-login/register redirects to `/profile?onboarding=1` when `org_type`/`org_size` missing; guide opens on profile
+- Dashboard visual polish (hero score band, clearer AI summary) within brand identity
+- Org profile soft gate on assessment / project review / dashboard
+- Clearer AI and community-chat error messages (CORS / Gemini / rate limits)
+- AiChatWidget stable message keys; login/register autocomplete fields
+- Community chat RTL bubble alignment (`mine` → `justify-end`)
 
 ## Env required
 
@@ -41,10 +42,10 @@ See `.env.example`:
 - `VITE_API_BASE_URL` (optional in dev)
 - `VITE_REVERB_APP_KEY`
 - `VITE_REVERB_HOST=reverbhuma.sci-syria.org`
-- `VITE_REVERB_PORT=80`
-- `VITE_REVERB_SCHEME=http`
+- `VITE_REVERB_PORT=80` (local/default) — production should use `443` + `https`
+- `VITE_REVERB_SCHEME=http` (local) / `https` (production)
 
-Public Reverb URL: `http://reverbhuma.sci-syria.org/`
+Public Reverb URL (prod target): `https://reverbhuma.sci-syria.org/` after DNS + TLS proxy.
 
 ## Run
 
@@ -53,7 +54,8 @@ npm install
 npm run dev
 ```
 
-## Active tasks
+## Active tasks / known deps on server
 
-- Keep Echo auth endpoint aligned with `/api/broadcasting/auth`
-- Ensure Reverb env matches backend
+- CORS requires backend `FRONTEND_URL` match SPA origin
+- Echo realtime needs Reverb DNS/TLS/proxy; REST chat still works without it
+- AI features need Gemini key + org profile + queue worker on API host
