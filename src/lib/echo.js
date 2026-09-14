@@ -3,6 +3,10 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
+const DEFAULT_REVERB_HOST = 'reverbhuma.sci-syria.org';
+const DEFAULT_REVERB_SCHEME = 'http';
+const DEFAULT_REVERB_PORT = 80;
+
 /**
  * Create a Laravel Echo client for Reverb using Sanctum bearer auth.
  * @param {'user'|'admin'} actor
@@ -22,13 +26,21 @@ export function createEcho(actor = 'user') {
   const apiBase = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/+$/, '');
   const authEndpoint = `${apiBase}/broadcasting/auth`;
 
+  const scheme = (import.meta.env.VITE_REVERB_SCHEME || DEFAULT_REVERB_SCHEME).toLowerCase();
+  const forceTLS = scheme === 'https';
+  const wsHost = import.meta.env.VITE_REVERB_HOST || DEFAULT_REVERB_HOST;
+  const wsPort = Number(
+    import.meta.env.VITE_REVERB_PORT
+      || (forceTLS ? 443 : DEFAULT_REVERB_PORT),
+  );
+
   return new Echo({
     broadcaster: 'reverb',
     key,
-    wsHost: import.meta.env.VITE_REVERB_HOST || window.location.hostname,
-    wsPort: Number(import.meta.env.VITE_REVERB_PORT || 8080),
-    wssPort: Number(import.meta.env.VITE_REVERB_PORT || 8080),
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'http') === 'https',
+    wsHost,
+    wsPort,
+    wssPort: Number(import.meta.env.VITE_REVERB_PORT || (forceTLS ? 443 : DEFAULT_REVERB_PORT)),
+    forceTLS,
     enabledTransports: ['ws', 'wss'],
     authEndpoint,
     auth: {

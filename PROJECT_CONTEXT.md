@@ -39,7 +39,12 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 See `.env.example`:
 
 - `VITE_API_BASE_URL` (optional in dev)
-- `VITE_REVERB_APP_KEY`, `VITE_REVERB_HOST`, `VITE_REVERB_PORT`, `VITE_REVERB_SCHEME`
+- `VITE_REVERB_APP_KEY`
+- `VITE_REVERB_HOST=reverbhuma.sci-syria.org`
+- `VITE_REVERB_PORT=80`
+- `VITE_REVERB_SCHEME=http`
+
+Public Reverb URL: `http://reverbhuma.sci-syria.org/`
 
 ## Run
 

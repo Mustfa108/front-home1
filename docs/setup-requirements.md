@@ -19,7 +19,19 @@ npm run dev
 
 ## متغيرات مهمة في `.env`
 - `VITE_API_BASE_URL` اتركه فارغاً في التطوير (يستخدم proxy)
-- `VITE_REVERB_APP_KEY` و`VITE_REVERB_HOST` و`VITE_REVERB_PORT` و`VITE_REVERB_SCHEME` يجب أن تطابق الباك إند
+- Reverb العام:
+
+```
+VITE_REVERB_HOST=reverbhuma.sci-syria.org
+VITE_REVERB_PORT=80
+VITE_REVERB_SCHEME=http
+```
+
+الرابط:
+
+`http://reverbhuma.sci-syria.org/`
+
+- `VITE_REVERB_APP_KEY` يجب أن يطابق مفتاح الباك إند
 
 ## صفحات جديدة
 - `/chat` دردشة المجتمع
