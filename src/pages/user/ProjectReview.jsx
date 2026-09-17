@@ -321,6 +321,19 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
         <Target className="text-brand-600" size={21} />
         <h2 className="heading-3">نتيجة التقييم: {review.project_name}</h2>
       </div>
+
+      {review.is_fallback && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+          <div>
+            <p className="font-semibold">تقييم تقريبي (وضع احتياطي)</p>
+            <p className="mt-1 text-amber-800 dark:text-amber-200">
+              تعذّر الاتصال بخدمة الذكاء الاصطناعي أو تحليل الرد حالياً، لذلك عُرض تقييم مبسّط مبني على إجاباتك. المحتوى تقريبي — أعد الإرسال لاحقاً بعد التأكد من مفتاح Gemini على السيرفر.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-3">
         <Card><CardBody><p className="text-sm text-slate-500">الدرجة الواقعية</p><p className={`mt-2 text-4xl font-extrabold ${scoreTone}`}>{review.ai_score}<span className="text-lg">/100</span></p></CardBody></Card>
         <Card><CardBody><p className="text-sm text-slate-500">مستوى الجاهزية</p><p className="mt-3 text-xl font-bold text-slate-900">{review.ai_level}</p><span className="mt-2 inline-flex items-center gap-1 text-xs text-slate-500"><TrendingUp size={14} /> بناءً على وصف المشروع</span></CardBody></Card>
