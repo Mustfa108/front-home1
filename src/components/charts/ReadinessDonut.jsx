@@ -6,6 +6,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { useChartTheme } from '../../hooks/useChartTheme';
 
 const COLORS = {
   low: '#DC2626',
@@ -20,7 +21,7 @@ const LABELS = {
 };
 
 export function ReadinessDonut({ data = [], height = 240 }) {
-  // data: [{ key, count, percentage, label_ar }]
+  const chartTheme = useChartTheme();
   const chartData = data
     .filter((d) => d.count > 0)
     .map((d) => ({
@@ -32,7 +33,7 @@ export function ReadinessDonut({ data = [], height = 240 }) {
   if (chartData.length === 0) {
     return (
       <div
-        className="flex items-center justify-center text-sm text-slate-400"
+        className="flex items-center justify-center text-sm text-slate-400 dark:text-slate-400"
         style={{ height }}
       >
         لا توجد بيانات بعد.
@@ -59,17 +60,14 @@ export function ReadinessDonut({ data = [], height = 240 }) {
               <Cell key={entry.key} fill={COLORS[entry.key] || '#94a3b8'} />
             ))}
           </Pie>
-          <Tooltip
-            contentStyle={{
-              direction: 'rtl',
-              borderRadius: 12,
-              border: '1px solid #e2e8f0',
-              fontFamily: 'Cairo, Tajawal, system-ui',
-            }}
-          />
+          <Tooltip contentStyle={chartTheme.tooltipStyle} />
           <Legend
             verticalAlign="bottom"
-            wrapperStyle={{ direction: 'rtl', fontFamily: 'Cairo' }}
+            wrapperStyle={{
+              direction: 'rtl',
+              fontFamily: 'Cairo',
+              color: chartTheme.tick,
+            }}
           />
         </PieChart>
       </ResponsiveContainer>

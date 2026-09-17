@@ -33,6 +33,10 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 
 ## Recent major changes
 
+- Assessment charts (bar/radar/donut) follow light/dark CSS tokens via `useChartTheme`
+- Results table, scores, and percentages are readable in dark mode; `formatScore` uses Arabic decimal + percent
+- Assessment questionnaire progress/notes/dots use dark surfaces; question title no longer clipped
+- Generic Laravel `Server Error` is mapped to Arabic; AI generate/chat/project-review requests use a 90s timeout
 - Admin pages for statistics, axes, questions, assessment versions, and AI review now use `AdminLayout` instead of user `PageContainer` (which triggered `/notifications` 401 and forced logout)
 - `NotificationsBell` skips the notifications request unless a user token exists
 - `OrgProfileGate` import paths corrected so the SPA can load (`../contexts`, `../utils`, `./ui`)

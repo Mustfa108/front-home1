@@ -199,18 +199,19 @@ export default function AssessmentResults() {
               <p
                 className="mt-1 text-6xl font-extrabold"
                 style={{ color: readiness.color }}
+                dir="rtl"
               >
                 {formatScore(assessment.overall_score, 1)}
               </p>
               <div className="mt-3">
                 <ReadinessBadge level={assessment.readiness_level} />
               </div>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                 {locale === 'en' ? readiness.descriptionEn : readiness.description}
               </p>
             </div>
             <div className="md:col-span-2">
-              <div className="mb-2 flex items-center gap-2 text-sm font-bold text-slate-700">
+              <div className="mb-2 flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200">
                 <Sparkles size={16} className="text-brand-600" />
                 {t('dashboard.aiSummary')}
                 {assessment.ai_ready ? (
@@ -280,7 +281,7 @@ export default function AssessmentResults() {
         <CardBody className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <thead className="bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-200">
                 <tr>
                   <th className="px-6 py-3 text-right font-semibold">المحور</th>
                   <th className="px-6 py-3 text-right font-semibold">الدرجة</th>
@@ -294,17 +295,19 @@ export default function AssessmentResults() {
                   return (
                     <tr
                       key={p.pillar_id}
-                      className="border-t border-slate-100 transition hover:bg-slate-50"
+                      className="border-t border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/60"
                     >
-                      <td className="px-6 py-3 font-semibold text-slate-800">
+                      <td className="px-6 py-3 font-semibold text-slate-800 dark:text-slate-100">
                         {pillarLabel(p, locale)}
                       </td>
-                      <td className="px-6 py-3 text-slate-600">
-                        {p.raw_score} / {p.max_score}
+                      <td className="px-6 py-3 text-slate-600 dark:text-slate-300">
+                        <span dir="ltr" className="inline-block tabular-nums">
+                          {p.raw_score} / {p.max_score}
+                        </span>
                       </td>
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="h-2 w-24 overflow-hidden rounded-full bg-slate-100">
+                          <div className="h-2 w-24 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                             <div
                               className="h-full rounded-full"
                               style={{
@@ -313,7 +316,7 @@ export default function AssessmentResults() {
                               }}
                             />
                           </div>
-                          <span className="font-bold text-slate-700">
+                          <span className="font-bold text-slate-700 dark:text-slate-100" dir="rtl">
                             {formatScore(p.percentage)}
                           </span>
                         </div>

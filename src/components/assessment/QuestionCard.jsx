@@ -16,7 +16,7 @@ export function QuestionCard({
   const isYesNo = answerType === 'yes_no';
 
   return (
-    <div className="card-padded animate-fade-in overflow-hidden bg-gradient-to-br from-white via-white to-brand-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-brand-950/30">
+    <div className="card-padded animate-fade-in overflow-visible bg-gradient-to-br from-white via-white to-brand-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-brand-950/30">
       <div className="mb-1 flex items-center justify-between text-sm">
         <span className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 font-medium text-brand-700 dark:bg-brand-950 dark:text-brand-200">
           {pillar}
@@ -25,7 +25,7 @@ export function QuestionCard({
           {t('assessment.questionOf', { n: index + 1, total })}
         </span>
       </div>
-      <h2 className="text-xl font-bold text-slate-900 text-balance dark:text-slate-50">
+      <h2 className="text-xl font-bold text-slate-900 text-balance break-words dark:text-slate-50">
         {question}
       </h2>
       <p className="mt-1 text-sm text-slate-500">
@@ -49,7 +49,7 @@ export function QuestionCard({
                 onClick={() => onChange(opt.value)}
                 className={clsx(
                   'group flex flex-col items-center justify-center rounded-3xl border-2 px-4 py-8 transition-all',
-                  'hover:-translate-y-0.5 hover:shadow-soft focus:outline-none focus:ring-2 focus:ring-offset-2',
+                  'hover:-translate-y-0.5 hover:shadow-soft focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900',
                   selected
                     ? 'bg-white shadow-card ring-2 dark:bg-slate-900'
                     : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900',
@@ -84,7 +84,7 @@ export function QuestionCard({
                 onClick={() => onChange(opt.value)}
                 className={clsx(
                   'group flex flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all',
-                  'hover:-translate-y-0.5 hover:shadow-soft focus:outline-none focus:ring-2 focus:ring-offset-2',
+                  'hover:-translate-y-0.5 hover:shadow-soft focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900',
                   selected
                     ? 'border-transparent bg-white shadow-card ring-2 dark:bg-slate-900'
                     : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900',

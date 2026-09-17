@@ -210,7 +210,7 @@ export default function Assessment() {
                       ? 'w-6 bg-brand-600'
                       : answered
                       ? 'bg-emerald-400'
-                      : 'bg-slate-200',
+                      : 'bg-slate-200 dark:bg-slate-600',
                   )}
                   aria-label={`الانتقال للسؤال ${i + 1}`}
                 />
@@ -226,18 +226,18 @@ export default function Assessment() {
             locale={locale}
           />
           <Card className="p-5">
-            <h3 className="text-sm font-bold text-slate-900">ملاحظة</h3>
-            <p className="mt-2 text-xs text-slate-500">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">ملاحظة</h3>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               أجب بصدق بناءً على وضع فريقك الحالي. كل سؤال من 1 (ضعيف جداً)
               إلى 5 (ممتاز). يمكنك التنقل بين الأسئلة وتعديل إجاباتك قبل
               الإرسال.
             </p>
-            <div className="mt-3 rounded-lg bg-slate-50 p-2 text-xs text-slate-600">
+            <div className="mt-3 rounded-lg bg-slate-50 p-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
               {answeredCount}/{total} سؤال تمت الإجابة
             </div>
           </Card>
           {!assessmentId && (
-            <Card className="border-amber-200 bg-amber-50 p-4 text-xs text-amber-700">
+            <Card className="border-amber-200 bg-amber-50 p-4 text-xs text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
               <div className="flex items-center gap-2">
                 <Loader2 size={14} className="animate-spin" />
                 جارٍ تجهيز جلسة التقييم…

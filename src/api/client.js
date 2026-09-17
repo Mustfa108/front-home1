@@ -86,17 +86,22 @@ export function createApiClient(actor = 'user') {
         }
       }
 
-      // Normalize Laravel validation errors and ApiResponse errors
+      const rawMessage = typeof data?.message === 'string' ? data.message.trim() : '';
+      const isGenericServerError = /^server error\.?$/i.test(rawMessage);
+
       const message =
-        data?.message ||
-        (status === 422 && data?.errors
-          ? Object.values(data.errors).flat()[0]
-          : null) ||
-        'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+        isGenericServerError || (status >= 500 && !rawMessage)
+          ? 'تعذر إكمال الطلب بسبب خطأ داخلي في الخادم. راجع مفتاح Gemini أو أعد المحاولة.'
+          : rawMessage ||
+            (status === 422 && data?.errors
+              ? Object.values(data.errors).flat()[0]
+              : null) ||
+            'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
 
       return Promise.reject({
         status,
         message,
+        errorCode: data?.error_code || null,
         errors: data?.errors || null,
         raw: error,
       });

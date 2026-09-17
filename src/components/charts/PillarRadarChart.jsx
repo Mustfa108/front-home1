@@ -9,6 +9,7 @@ import {
 } from 'recharts';
 import { PILLAR_LABELS_AR, PILLAR_LABELS_EN } from '../../utils/constants';
 import { pillarLabel } from '../../utils/locale';
+import { useChartTheme } from '../../hooks/useChartTheme';
 
 export function PillarRadarChart({
   data = [],
@@ -18,6 +19,7 @@ export function PillarRadarChart({
   showLabels = true,
   locale = 'ar',
 }) {
+  const chartTheme = useChartTheme();
   const labels = locale === 'en' ? PILLAR_LABELS_EN : PILLAR_LABELS_AR;
   const chartData = data.map((d) => ({
     pillar: pillarLabel(d, locale) || labels[d.pillar_key] || d.pillar_key,
@@ -28,26 +30,21 @@ export function PillarRadarChart({
     <div style={{ width: '100%', height }} dir="ltr">
       <ResponsiveContainer>
         <ReRadar data={chartData} outerRadius="75%">
-          <PolarGrid stroke="#e2e8f0" />
+          <PolarGrid stroke={chartTheme.grid} />
           {showLabels && (
             <PolarAngleAxis
               dataKey="pillar"
-              tick={{ fill: '#334155', fontSize: 12, fontWeight: 500 }}
+              tick={{ fill: chartTheme.tick, fontSize: 12, fontWeight: 500 }}
             />
           )}
           <PolarRadiusAxis
             angle={90}
             domain={[0, 100]}
-            tick={{ fill: '#94a3b8', fontSize: 10 }}
-            stroke="#cbd5e1"
+            tick={{ fill: chartTheme.muted, fontSize: 10 }}
+            stroke={chartTheme.axis}
           />
           <Tooltip
-            contentStyle={{
-              direction: 'rtl',
-              borderRadius: 12,
-              border: '1px solid #e2e8f0',
-              fontFamily: 'Cairo, Tajawal, system-ui',
-            }}
+            contentStyle={chartTheme.tooltipStyle}
             formatter={(value) => [`${value}%`, 'النسبة']}
           />
           <Radar
@@ -55,7 +52,7 @@ export function PillarRadarChart({
             dataKey="value"
             stroke={strokeColor}
             fill={fillColor}
-            fillOpacity={0.35}
+            fillOpacity={chartTheme.isDark ? 0.45 : 0.35}
             isAnimationActive
           />
         </ReRadar>

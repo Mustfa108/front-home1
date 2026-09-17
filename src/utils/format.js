@@ -32,9 +32,18 @@ export function formatDate(value, opts = {}) {
   return ar ? toArabicDigits(out) : out;
 }
 
+/**
+ * Format a score/percentage for RTL Arabic UI.
+ * Uses Arabic-Indic digits, Arabic decimal separator, and Arabic percent
+ * so the bidi algorithm does not render values like `%70.`.
+ */
 export function formatScore(value, decimals = 1) {
   if (value === null || value === undefined) return '—';
-  return toArabicDigits(Number(value).toFixed(decimals)) + '٪';
+  const [integerPart, fractionPart] = Number(value).toFixed(decimals).split('.');
+  const arabicNumber =
+    toArabicDigits(integerPart) +
+    (fractionPart !== undefined ? `\u066B${toArabicDigits(fractionPart)}` : '');
+  return `${arabicNumber}\u00A0\u066A`;
 }
 
 export function pluralizeAr(count, forms) {

@@ -9,12 +9,14 @@ import {
   Cell,
 } from 'recharts';
 import { readinessFromScore } from '../../utils/constants';
+import { useChartTheme } from '../../hooks/useChartTheme';
 
 /**
  * Vertical bar chart of pillar percentages. Bars are colored by
  * their score band so the chart "reads" like a readiness overview.
  */
 export function PillarBarChart({ data = [], height = 280, locale = 'ar' }) {
+  const chartTheme = useChartTheme();
   const chartData = data.map((d) => {
     const cfg = readinessFromScore(Number(d.percentage) || 0);
     return {
@@ -29,10 +31,12 @@ export function PillarBarChart({ data = [], height = 280, locale = 'ar' }) {
     <div style={{ width: '100%', height }} dir="ltr">
       <ResponsiveContainer>
         <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: '#334155', fontSize: 12 }}
+            tick={{ fill: chartTheme.tick, fontSize: 12 }}
+            axisLine={{ stroke: chartTheme.axis }}
+            tickLine={{ stroke: chartTheme.axis }}
             angle={-15}
             textAnchor="end"
             interval={0}
@@ -40,17 +44,14 @@ export function PillarBarChart({ data = [], height = 280, locale = 'ar' }) {
           />
           <YAxis
             domain={[0, 100]}
-            tick={{ fill: '#94a3b8', fontSize: 11 }}
+            tick={{ fill: chartTheme.muted, fontSize: 11 }}
+            axisLine={{ stroke: chartTheme.axis }}
+            tickLine={{ stroke: chartTheme.axis }}
             tickFormatter={(v) => `${v}%`}
           />
           <Tooltip
-            cursor={{ fill: 'rgba(148,163,184,0.08)' }}
-            contentStyle={{
-              direction: 'rtl',
-              borderRadius: 12,
-              border: '1px solid #e2e8f0',
-              fontFamily: 'Cairo, Tajawal, system-ui',
-            }}
+            cursor={{ fill: chartTheme.isDark ? 'rgba(148,163,184,0.12)' : 'rgba(148,163,184,0.08)' }}
+            contentStyle={chartTheme.tooltipStyle}
             formatter={(value) => [`${value}%`, 'النسبة']}
           />
           <Bar dataKey="value" radius={[8, 8, 0, 0]}>

@@ -10,12 +10,26 @@
     color-scheme: light;
     --paper: #f7f7f4;
     --ink: #10131c;
+    --chart-tick: #334155;
+    --chart-muted: #64748b;
+    --chart-grid: #e2e8f0;
+    --chart-axis: #cbd5e1;
+    --chart-tooltip-bg: #ffffff;
+    --chart-tooltip-border: #e2e8f0;
+    --chart-tooltip-text: #0f172a;
   }
 
   html.dark {
     color-scheme: dark;
     --paper: #020617; /* slate-950 */
     --ink: #f1f5f9;
+    --chart-tick: #e2e8f0;
+    --chart-muted: #cbd5e1;
+    --chart-grid: #334155;
+    --chart-axis: #64748b;
+    --chart-tooltip-bg: #0f172a;
+    --chart-tooltip-border: #334155;
+    --chart-tooltip-text: #f1f5f9;
   }
 
   html {
