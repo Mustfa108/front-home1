@@ -5,7 +5,8 @@ import { useToast } from '../../contexts/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { versionsApi } from '../../api/admin';
 import { formatDate } from '../../utils/format';
-import { PageContainer, PageHeader } from '../../components/layout/Navbar';
+import { PageHeader } from '../../components/layout/Navbar';
+import { AdminLayout } from '../../components/layout/AdminLayout';
 import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
@@ -31,7 +32,13 @@ export default function AdminAssessmentVersions() {
 
   const { data, loading, error } = useAsync(() => versionsApi.list(), { deps: [reloadKey] });
 
-  if (loading && !data) return <FullPageSpinner />;
+  if (loading && !data) {
+    return (
+      <AdminLayout>
+        <FullPageSpinner />
+      </AdminLayout>
+    );
+  }
 
   const d = data?.data || {};
   const versions = d.versions || [];
@@ -64,7 +71,7 @@ export default function AdminAssessmentVersions() {
   };
 
   return (
-    <PageContainer>
+    <AdminLayout>
       <PageHeader
         title="إصدارات التقييم"
         subtitle="كل تقييم مرتبط بإصدار محدد من الأسئلة والأوزان — تعديلاتك لا تغيّر النتائج السابقة"
@@ -136,6 +143,6 @@ export default function AdminAssessmentVersions() {
           </div>
         </Modal>
       )}
-    </PageContainer>
+    </AdminLayout>
   );
 }

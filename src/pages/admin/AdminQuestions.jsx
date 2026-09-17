@@ -4,7 +4,8 @@ import { useAsync } from '../../hooks/useAsync';
 import { useToast } from '../../contexts/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { questionsApi, axesApi } from '../../api/admin';
-import { PageContainer, PageHeader } from '../../components/layout/Navbar';
+import { PageHeader } from '../../components/layout/Navbar';
+import { AdminLayout } from '../../components/layout/AdminLayout';
 import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -28,7 +29,13 @@ export default function AdminQuestions() {
     return { questions: q.data, axes: a.data };
   }, { deps: [reloadKey] });
 
-  if (loading && !data) return <FullPageSpinner />;
+  if (loading && !data) {
+    return (
+      <AdminLayout>
+        <FullPageSpinner />
+      </AdminLayout>
+    );
+  }
 
   const questions = data?.questions?.questions || [];
   const axes = data?.axes?.axes || [];
@@ -91,7 +98,7 @@ export default function AdminQuestions() {
   const totalWeight = questions.filter((q) => q.is_active).reduce((sum, q) => sum + Number(q.weight || 0), 0);
 
   return (
-    <PageContainer>
+    <AdminLayout>
       <PageHeader
         title="إدارة الأسئلة"
         actions={
@@ -188,6 +195,6 @@ export default function AdminQuestions() {
           </form>
         </Modal>
       )}
-    </PageContainer>
+    </AdminLayout>
   );
 }

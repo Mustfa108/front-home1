@@ -4,7 +4,8 @@ import { useAsync } from '../../hooks/useAsync';
 import { useToast } from '../../contexts/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { axesApi, versionsApi } from '../../api/admin';
-import { PageContainer, PageHeader } from '../../components/layout/Navbar';
+import { PageHeader } from '../../components/layout/Navbar';
+import { AdminLayout } from '../../components/layout/AdminLayout';
 import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -25,7 +26,13 @@ export default function AdminAxes() {
 
   const { data, loading, error } = useAsync(() => axesApi.list(), { deps: [reloadKey] });
 
-  if (loading && !data) return <FullPageSpinner />;
+  if (loading && !data) {
+    return (
+      <AdminLayout>
+        <FullPageSpinner />
+      </AdminLayout>
+    );
+  }
 
   const d = data?.data || {};
   const axes = d.axes || [];
@@ -79,7 +86,7 @@ export default function AdminAxes() {
   };
 
   return (
-    <PageContainer>
+    <AdminLayout>
       <PageHeader
         title="إدارة المحاور"
         subtitle={d.version ? `الإصدار ${d.version.version_number} (${d.version.status === 'draft' ? 'مسودة' : 'منشور'})` : ''}
@@ -160,6 +167,6 @@ export default function AdminAxes() {
           </form>
         </Modal>
       )}
-    </PageContainer>
+    </AdminLayout>
   );
 }

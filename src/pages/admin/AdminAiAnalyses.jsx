@@ -5,8 +5,9 @@ import { useToast } from '../../contexts/ToastContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { aiAnalysesApi } from '../../api/admin';
 import { formatDate } from '../../utils/format';
-import { PageContainer, PageHeader } from '../../components/layout/Navbar';
-import { Card, CardBody, CardHeader } from '../../components/ui/Card';
+import { PageHeader } from '../../components/layout/Navbar';
+import { AdminLayout } from '../../components/layout/AdminLayout';
+import { Card, CardBody, CardHeader, EmptyState } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { FullPageSpinner } from '../../components/ui/Spinner';
@@ -35,7 +36,13 @@ export default function AdminAiAnalyses() {
     { deps: [reloadKey] },
   );
 
-  if (loading && !data) return <FullPageSpinner />;
+  if (loading && !data) {
+    return (
+      <AdminLayout>
+        <FullPageSpinner />
+      </AdminLayout>
+    );
+  }
 
   const items = data?.data || [];
 
@@ -66,7 +73,7 @@ export default function AdminAiAnalyses() {
   };
 
   return (
-    <PageContainer>
+    <AdminLayout>
       <PageHeader title="مراجعة التحليلات الذكية" subtitle="عرض وإدارة مخرجات الذكاء الاصطناعي قبل ظهورها للمستخدمين" />
 
       {error ? (
@@ -145,6 +152,6 @@ export default function AdminAiAnalyses() {
           </Card>
         </Modal>
       )}
-    </PageContainer>
+    </AdminLayout>
   );
 }

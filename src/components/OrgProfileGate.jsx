@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Building2 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { isOrgProfileComplete } from '../../utils/orgProfile';
-import { Card, CardBody } from '../ui/Card';
-import { Button } from '../ui/Button';
+import { useAuth } from '../contexts/AuthContext';
+import { isOrgProfileComplete } from '../utils/orgProfile';
+import { Card, CardBody } from './ui/Card';
+import { Button } from './ui/Button';
 
 /**
  * Soft gate banner when organization profile is incomplete.

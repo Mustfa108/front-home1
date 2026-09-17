@@ -26,6 +26,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useAsync } from '../../hooks/useAsync';
 import { notificationApi } from '../../api/notification';
+import { tokenKeys } from '../../api/client';
 import { SiteFooter } from './SiteFooter';
 
 function useNavItems() {
@@ -95,9 +96,11 @@ function ThemeToggle() {
 
 function NotificationsBell({ onNavigate }) {
   const { t } = useLanguage();
-  const { data } = useAsync(() => notificationApi.list({ page: 1 }), {
-    deps: [],
-  });
+  const hasUserToken = Boolean(localStorage.getItem(tokenKeys.user));
+  const { data } = useAsync(
+    () => notificationApi.list({ page: 1 }),
+    { immediate: hasUserToken, deps: [hasUserToken] },
+  );
   const unread = data?.unread_count || 0;
   return (
     <button

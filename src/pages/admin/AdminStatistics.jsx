@@ -12,7 +12,8 @@ import {
 import { useAsync } from '../../hooks/useAsync';
 import { adminApi_ } from '../../api/admin';
 import { formatScore } from '../../utils/format';
-import { PageContainer, PageHeader } from '../../components/layout/Navbar';
+import { PageHeader } from '../../components/layout/Navbar';
+import { AdminLayout } from '../../components/layout/AdminLayout';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -64,24 +65,30 @@ export default function AdminStatistics() {
     setApplied(Object.fromEntries(Object.entries(filters).filter(([, v]) => v)));
   };
 
-  if (loading && !data) return <FullPageSpinner />;
+  if (loading && !data) {
+    return (
+      <AdminLayout>
+        <FullPageSpinner />
+      </AdminLayout>
+    );
+  }
   if (error) {
     return (
-      <PageContainer>
+      <AdminLayout>
         <Card>
           <CardBody>
             <p className="text-sm text-red-600">{error}</p>
             <Button className="mt-3" onClick={refresh} leftIcon={<RefreshCw size={14} />}>إعادة المحاولة</Button>
           </CardBody>
         </Card>
-      </PageContainer>
+      </AdminLayout>
     );
   }
 
   const d = data?.data || {};
 
   return (
-    <PageContainer>
+    <AdminLayout>
       <PageHeader title="إحصائيات المنصة" subtitle="مؤشرات عامة قابلة للتصفية بالتاريخ ونوع وحجم المنظمة" />
 
       {/* Filters */}
@@ -215,6 +222,6 @@ export default function AdminStatistics() {
           <InlineSpinner label="جاري تحديث الإحصائيات…" />
         </div>
       )}
-    </PageContainer>
+    </AdminLayout>
   );
 }

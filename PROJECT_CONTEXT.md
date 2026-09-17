@@ -15,19 +15,27 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 
 ## Key routes
 
-| Path | Purpose |
-|------|---------|
-| `/assessment` | Questionnaire (Likert or Yes/No) |
-| `/assessment/:id/results` | Results + AI + PDF (regenerate supported) |
-| `/project-review` | AI project review + map pin claim |
-| `/expansion` | Projects map + expansion areas |
-| `/chat` | Community chat (all users) |
-| `/profile?onboarding=1` | Org onboarding after login when incomplete |
-| `/admin/settings` | Gemini key + social links |
-| `/admin/community-chat` | Admin view of community chat |
+| Path                      | Purpose                                    |
+| ------------------------- | ------------------------------------------ |
+| `/assessment`             | Questionnaire (Likert or Yes/No)           |
+| `/assessment/:id/results` | Results + AI + PDF (regenerate supported)  |
+| `/project-review`         | AI project review + map pin claim          |
+| `/expansion`              | Projects map + expansion areas             |
+| `/chat`                   | Community chat (all users)                 |
+| `/profile?onboarding=1`   | Org onboarding after login when incomplete |
+| `/admin/settings`         | Gemini key + social links                  |
+| `/admin/community-chat`   | Admin view of community chat               |
+| `/admin/statistics`       | Platform KPIs (uses AdminLayout)           |
+| `/admin/axes`             | Questionnaire axes (draft only)            |
+| `/admin/questions`        | Questionnaire questions (draft only)       |
+| `/admin/assessment-versions` | Draft / publish questionnaire versions  |
+| `/admin/ai-analyses`      | Review generated AI analyses               |
 
 ## Recent major changes
 
+- Admin pages for statistics, axes, questions, assessment versions, and AI review now use `AdminLayout` instead of user `PageContainer` (which triggered `/notifications` 401 and forced logout)
+- `NotificationsBell` skips the notifications request unless a user token exists
+- `OrgProfileGate` import paths corrected so the SPA can load (`../contexts`, `../utils`, `./ui`)
 - SplashScreen skipped on `/admin/*` and marks session seen so it does not overlay admin pages
 - Admin dark mode: AdminLayout, Card headers, badges, `.admin-table`, and admin page text/surfaces
 - Project review shows amber banner when API returns `is_fallback`
@@ -46,11 +54,11 @@ See `.env.example`:
 
 - `VITE_API_BASE_URL` (optional in dev)
 - `VITE_REVERB_APP_KEY`
-- `VITE_REVERB_HOST=reverbhuma.sci-syria.org`
+- `VITE_REVERB_HOST=reverb.sci-syria.org`
 - `VITE_REVERB_PORT=80` (local/default) — production should use `443` + `https`
 - `VITE_REVERB_SCHEME=http` (local) / `https` (production)
 
-Public Reverb URL (prod target): `https://reverbhuma.sci-syria.org/` after DNS + TLS proxy.
+Public Reverb URL (prod target): `https://reverb.sci-syria.org/` after DNS + TLS proxy.
 
 ## Run
 
