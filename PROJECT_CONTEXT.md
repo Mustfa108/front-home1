@@ -29,6 +29,7 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 ## Recent major changes
 
 - SplashScreen skipped on `/admin/*` and marks session seen so it does not overlay admin pages
+- Admin dark mode: AdminLayout, Card headers, badges, `.admin-table`, and admin page text/surfaces
 - Post-login/register redirects to `/profile?onboarding=1` when `org_type`/`org_size` missing; guide opens on profile
 - Dashboard visual polish (hero score band, clearer AI summary) within brand identity
 - Org profile soft gate on assessment / project review / dashboard

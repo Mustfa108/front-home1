@@ -46,7 +46,7 @@ function NavItem({ to, label, icon: Icon, end, onClick }) {
         clsx(
           'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
           isActive
-            ? 'bg-white text-brand-700 shadow-sm'
+            ? 'bg-white text-brand-700 shadow-sm dark:bg-brand-950/40 dark:text-brand-200'
             : 'text-brand-100 hover:bg-brand-700/60 hover:text-white',
         )
       }
@@ -87,10 +87,10 @@ function AdminMenu() {
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-          <div className="absolute bottom-full right-0 left-0 z-40 mb-2 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-card">
+          <div className="absolute bottom-full right-0 left-0 z-40 mb-2 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-card dark:border-slate-700 dark:bg-slate-900">
             <button
               onClick={handleLogout}
-              className="flex w-full items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+              className="flex w-full items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40"
             >
               <LogOut size={16} />
               تسجيل الخروج
@@ -104,10 +104,9 @@ function AdminMenu() {
 
 export function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
+    <div className="flex min-h-screen bg-slate-100 dark:bg-slate-950">
       {/* Sidebar */}
       <aside
         className={clsx(
@@ -159,20 +158,20 @@ export function AdminLayout({ children }) {
 
       {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white px-4 shadow-sm md:px-6">
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white px-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:px-6">
           <button
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 md:hidden"
+            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden"
             onClick={() => setSidebarOpen(true)}
             aria-label="فتح القائمة"
           >
             <Menu size={20} />
           </button>
-          <h2 className="text-sm font-semibold text-slate-700">
+          <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             مرحباً بك في لوحة الإدارة
           </h2>
         </header>
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
-        <SiteFooter className="border-t border-slate-200 bg-white" />
+        <SiteFooter className="border-t border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900" />
       </div>
     </div>
   );

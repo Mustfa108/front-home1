@@ -108,8 +108,8 @@ export default function AdminDashboard() {
                   key={d.key || d.label_ar}
                   className="flex items-center justify-between"
                 >
-                  <span className="text-slate-600">{d.label_ar}</span>
-                  <span className="font-semibold text-slate-800">
+                  <span className="text-slate-600 dark:text-slate-300">{d.label_ar}</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-100">
                     {d.count} ({d.percentage}%)
                   </span>
                 </li>
@@ -152,14 +152,14 @@ export default function AdminDashboard() {
         />
         <CardBody>
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300">
               <AlertTriangle size={22} />
             </span>
             <div>
-              <p className="text-2xl font-extrabold text-slate-900">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">
                 {data.most_common_weak_pillar_ar}
               </p>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 هذا هو المحور الذي يعاني منه أغلب المستخدمين حالياً.
               </p>
             </div>
@@ -172,10 +172,10 @@ export default function AdminDashboard() {
 
 function KpiCard({ icon: Icon, label, value, tone = 'brand' }) {
   const toneClass = {
-    brand: 'bg-brand-50 text-brand-600',
-    emerald: 'bg-emerald-50 text-emerald-600',
-    amber: 'bg-amber-50 text-amber-600',
-    slate: 'bg-slate-100 text-slate-600',
+    brand: 'bg-brand-50 text-brand-600 dark:bg-brand-950/50 dark:text-brand-300',
+    emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300',
+    amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300',
+    slate: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
   }[tone];
 
   return (
@@ -185,8 +185,8 @@ function KpiCard({ icon: Icon, label, value, tone = 'brand' }) {
           <Icon size={20} />
         </span>
         <div>
-          <p className="text-xs text-slate-500">{label}</p>
-          <p className="text-xl font-extrabold text-slate-900">{value ?? 0}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
+          <p className="text-xl font-extrabold text-slate-900 dark:text-slate-100">{value ?? 0}</p>
         </div>
       </CardBody>
     </Card>

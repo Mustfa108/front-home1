@@ -116,11 +116,11 @@ export default function AdminAxes() {
               <CardBody>
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                   <div>
-                    <p className="font-bold text-slate-800">
+                    <p className="font-bold text-slate-800 dark:text-slate-100">
                       {axis.name_ar}
                       {!axis.is_active && <span className="badge-low mr-2">معطّل</span>}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       المفتاح: {axis.key} — الترتيب: {axis.display_order} — الأسئلة: {axis.questions_count}
                     </p>
                   </div>

@@ -40,8 +40,8 @@ export default function AdminAnalytics() {
               <Award size={20} />
             </span>
             <div>
-              <p className="text-xs text-slate-500">أقوى محور</p>
-              <p className="text-lg font-extrabold text-slate-900">
+              <p className="text-xs text-slate-500 dark:text-slate-400">أقوى محور</p>
+              <p className="text-lg font-extrabold text-slate-900 dark:text-slate-100">
                 {data.strongest_pillar_ar}
               </p>
             </div>
@@ -53,8 +53,8 @@ export default function AdminAnalytics() {
               <TrendingDown size={20} />
             </span>
             <div>
-              <p className="text-xs text-slate-500">أضعف محور</p>
-              <p className="text-lg font-extrabold text-slate-900">
+              <p className="text-xs text-slate-500 dark:text-slate-400">أضعف محور</p>
+              <p className="text-lg font-extrabold text-slate-900 dark:text-slate-100">
                 {data.weakest_pillar_ar}
               </p>
             </div>
@@ -80,8 +80,8 @@ export default function AdminAnalytics() {
         <CardHeader title="جدول المحاور" />
         <CardBody className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+            <table className="admin-table">
+              <thead>
                 <tr>
                   <th className="px-6 py-3 text-right font-semibold">المحور</th>
                   <th className="px-6 py-3 text-right font-semibold">المفتاح</th>
@@ -90,17 +90,14 @@ export default function AdminAnalytics() {
               </thead>
               <tbody>
                 {data.pillars.map((p) => (
-                  <tr
-                    key={p.pillar_key}
-                    className="border-t border-slate-100"
-                  >
-                    <td className="px-6 py-3 font-semibold text-slate-800">
+                  <tr key={p.pillar_key}>
+                    <td className="px-6 py-3 font-semibold text-slate-800 dark:text-slate-100">
                       {p.pillar_ar}
                     </td>
-                    <td className="px-6 py-3 text-slate-500 font-mono text-xs">
+                    <td className="px-6 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">
                       {p.pillar_key}
                     </td>
-                    <td className="px-6 py-3 font-bold text-slate-700">
+                    <td className="px-6 py-3 font-bold text-slate-700 dark:text-slate-200">
                       {formatScore(p.average_percentage)}
                     </td>
                   </tr>

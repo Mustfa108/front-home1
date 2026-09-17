@@ -25,7 +25,7 @@ export default function AdminUsers() {
       <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h1 className="heading-2">المستخدمون</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             جميع المستخدمين المسجلين في المنصة
           </p>
         </div>
@@ -56,13 +56,13 @@ export default function AdminUsers() {
           ) : error ? (
             <div className="p-6 text-sm text-red-600">{error}</div>
           ) : (data?.data || []).length === 0 ? (
-            <div className="p-10 text-center text-sm text-slate-500">
+            <div className="p-10 text-center text-sm text-slate-500 dark:text-slate-400">
               لا توجد نتائج
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-600">
+              <table className="admin-table">
+                <thead>
                   <tr>
                     <th className="px-6 py-3 text-right font-semibold">المستخدم</th>
                     <th className="px-6 py-3 text-right font-semibold">المنظمة</th>
@@ -74,25 +74,22 @@ export default function AdminUsers() {
                 </thead>
                 <tbody>
                   {data.data.map((u) => (
-                    <tr
-                      key={u.id}
-                      className="border-t border-slate-100 transition hover:bg-slate-50"
-                    >
+                    <tr key={u.id} className="hoverable">
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 dark:bg-brand-950/50 dark:text-brand-300">
                             {u.name?.[0] || '؟'}
                           </span>
                           <div>
-                            <p className="font-semibold text-slate-900">{u.name}</p>
-                            <p className="flex items-center gap-1 text-xs text-slate-500">
+                            <p className="font-semibold text-slate-900 dark:text-slate-100">{u.name}</p>
+                            <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                               <Mail size={11} />
                               {u.email}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-3 text-slate-600">
+                      <td className="px-6 py-3 text-slate-600 dark:text-slate-300">
                         {u.organization_name ? (
                           <span className="inline-flex items-center gap-1">
                             <Building2 size={12} className="text-slate-400" />
@@ -102,15 +99,15 @@ export default function AdminUsers() {
                           <span className="text-slate-400">—</span>
                         )}
                       </td>
-                      <td className="px-6 py-3 font-semibold text-slate-700">
+                      <td className="px-6 py-3 font-semibold text-slate-700 dark:text-slate-200">
                         {u.assessments_count || 0}
                       </td>
-                      <td className="px-6 py-3 text-slate-500">
+                      <td className="px-6 py-3 text-slate-500 dark:text-slate-400">
                         {u.last_assessment_at
                           ? formatDate(u.last_assessment_at, { withTime: false })
                           : '—'}
                       </td>
-                      <td className="px-6 py-3 text-slate-500">
+                      <td className="px-6 py-3 text-slate-500 dark:text-slate-400">
                         {formatDate(u.created_at, { withTime: false })}
                       </td>
                       <td className="px-6 py-3">
@@ -141,7 +138,7 @@ export default function AdminUsers() {
           >
             السابق
           </button>
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-slate-500 dark:text-slate-400">
             صفحة {data.meta.current_page} من {data.meta.last_page}
           </span>
           <button

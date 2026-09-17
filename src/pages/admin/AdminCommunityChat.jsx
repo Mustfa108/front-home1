@@ -68,13 +68,13 @@ export default function AdminCommunityChat() {
       <Card>
         <CardHeader title="غرفة المجتمع" action={<span className="badge-medium"><Shield size={13} /> وضع الإدارة</span>} />
         <CardBody>
-          <div className="mb-4 max-h-[60vh] space-y-3 overflow-y-auto rounded-2xl bg-slate-50 p-4">
+          <div className="mb-4 max-h-[60vh] space-y-3 overflow-y-auto rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/50">
             {messages.map((message) => (
-              <div key={message.id} className={`rounded-2xl px-4 py-3 text-sm ${message.is_admin ? 'bg-amber-50 ring-1 ring-amber-200' : 'bg-white ring-1 ring-slate-100'}`}>
-                <p className="mb-1 text-[11px] font-bold text-slate-500">
+              <div key={message.id} className={`rounded-2xl px-4 py-3 text-sm ${message.is_admin ? 'bg-amber-50 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:ring-amber-800' : 'bg-white ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-700'}`}>
+                <p className="mb-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                   {message.is_admin ? 'إدارة' : 'مستخدم'} — {message.sender_name}
                 </p>
-                <p className="text-slate-800">{message.body}</p>
+                <p className="text-slate-800 dark:text-slate-100">{message.body}</p>
               </div>
             ))}
             <div ref={bottomRef} />

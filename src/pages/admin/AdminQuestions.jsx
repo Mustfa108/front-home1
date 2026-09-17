@@ -126,12 +126,12 @@ export default function AdminQuestions() {
               <CardBody>
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                       {q.text_ar}
                       {!q.is_active && <span className="badge-low mr-2">معطّل</span>}
                       {q.used_in_assessments && <span className="badge-neutral mr-2">مستخدم في تقييمات سابقة</span>}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                       المحور: {q.pillar_name_ar} — الترتيب: {q.display_order} — النوع:{' '}
                       {(q.answer_type || 'likert') === 'yes_no' ? 'نعم / لا' : 'مقياس Likert'}
                     </p>
@@ -156,7 +156,7 @@ export default function AdminQuestions() {
             <div>
               <label className="label">ربط السؤال بمحور <span className="text-red-500">*</span></label>
               <select
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+                className="input"
                 value={form.pillar_id || ''}
                 onChange={(e) => setForm((f) => ({ ...f, pillar_id: e.target.value }))}
                 required
@@ -171,7 +171,7 @@ export default function AdminQuestions() {
             <div>
               <label className="label">نوع الإجابة</label>
               <select
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm"
+                className="input"
                 value={form.answer_type || 'likert'}
                 onChange={(e) => setForm((f) => ({ ...f, answer_type: e.target.value }))}
               >

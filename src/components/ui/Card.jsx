@@ -12,13 +12,17 @@ export function CardHeader({ title, subtitle, action, className = '' }) {
   return (
     <div
       className={clsx(
-        'flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-4',
+        'flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-4 dark:border-slate-800',
         className,
       )}
     >
       <div>
-        {title && <h3 className="text-lg font-semibold text-slate-900">{title}</h3>}
-        {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
+        {title && (
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
+        )}
+        {subtitle && (
+          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>
+        )}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
@@ -33,14 +37,16 @@ export function EmptyState({ icon, title, description, action, className = '' })
   return (
     <div
       className={clsx(
-        'flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center',
+        'flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center dark:border-slate-700 dark:bg-slate-900',
         className,
       )}
     >
-      {icon && <div className="text-slate-400">{icon}</div>}
-      {title && <h3 className="text-lg font-semibold text-slate-900">{title}</h3>}
+      {icon && <div className="text-slate-400 dark:text-slate-500">{icon}</div>}
+      {title && (
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
+      )}
       {description && (
-        <p className="max-w-md text-sm text-slate-500">{description}</p>
+        <p className="max-w-md text-sm text-slate-500 dark:text-slate-400">{description}</p>
       )}
       {action && <div className="mt-2">{action}</div>}
     </div>

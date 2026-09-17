@@ -84,13 +84,13 @@ export default function AdminAiAnalyses() {
                 <CardBody>
                   <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                     <div>
-                      <p className="text-sm font-bold text-slate-800">
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
                         تقييم #{a.assessment_id}
-                        {a.org_name && <span className="text-slate-500"> — {a.org_name}</span>}
+                        {a.org_name && <span className="text-slate-500 dark:text-slate-400"> — {a.org_name}</span>}
                         <span className={`${badge.cls} mr-2`}>{badge.label}</span>
                         {a.is_fallback && <span className="badge-medium mr-1">تحليل احتياطي</span>}
                       </p>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                         النموذج: {a.model} — أُنشئ في {formatDate(a.created_at)}
                         {a.duration_ms ? ` — زمن الاستجابة: ${a.duration_ms}ms` : ''}
                         {a.reviewed_at ? ` — راجعه الأدمن في ${formatDate(a.reviewed_at)}` : ''}
@@ -126,11 +126,11 @@ export default function AdminAiAnalyses() {
             <CardBody className="space-y-3 text-sm leading-7">
               {detail.response_json ? (
                 <>
-                  <p className="font-semibold text-slate-800">الملخص العام</p>
-                  <p className="text-slate-600">{detail.response_json.overall_summary}</p>
+                  <p className="font-semibold text-slate-800 dark:text-slate-100">الملخص العام</p>
+                  <p className="text-slate-600 dark:text-slate-300">{detail.response_json.overall_summary}</p>
 
-                  <p className="font-semibold text-slate-800">التوصيات</p>
-                  <ol className="list-inside list-decimal space-y-1 text-slate-600">
+                  <p className="font-semibold text-slate-800 dark:text-slate-100">التوصيات</p>
+                  <ol className="list-inside list-decimal space-y-1 text-slate-600 dark:text-slate-300">
                     {(detail.response_json.recommendations || []).map((r, i) => (
                       <li key={i}>
                         {r.title ? `${r.title}: ${r.description}` : r.description}

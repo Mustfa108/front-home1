@@ -134,13 +134,13 @@ export default function AdminAssessments() {
           ) : error ? (
             <div className="p-6 text-sm text-red-600">{error}</div>
           ) : (data?.data || []).length === 0 ? (
-            <div className="p-10 text-center text-sm text-slate-500">
+            <div className="p-10 text-center text-sm text-slate-500 dark:text-slate-400">
               لا توجد تقييمات تطابق الفلاتر الحالية
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-600">
+              <table className="admin-table">
+                <thead>
                   <tr>
                     <th className="px-6 py-3 text-right font-semibold">المستخدم</th>
                     <th className="px-6 py-3 text-right font-semibold">المنظمة</th>
@@ -152,14 +152,11 @@ export default function AdminAssessments() {
                 </thead>
                 <tbody>
                   {data.data.map((a) => (
-                    <tr
-                      key={a.id}
-                      className="border-t border-slate-100 transition hover:bg-slate-50"
-                    >
-                      <td className="px-6 py-3 font-semibold text-slate-900">
+                    <tr key={a.id} className="hoverable">
+                      <td className="px-6 py-3 font-semibold text-slate-900 dark:text-slate-100">
                         {a.user_name}
                       </td>
-                      <td className="px-6 py-3 text-slate-600">
+                      <td className="px-6 py-3 text-slate-600 dark:text-slate-300">
                         {a.organization_name || '—'}
                       </td>
                       <td className="px-6 py-3">
@@ -173,7 +170,7 @@ export default function AdminAssessments() {
                       <td className="px-6 py-3">
                         <ReadinessBadge level={a.readiness_level} />
                       </td>
-                      <td className="px-6 py-3 text-slate-500">
+                      <td className="px-6 py-3 text-slate-500 dark:text-slate-400">
                         {formatDate(a.created_at, { withTime: false })}
                       </td>
                       <td className="px-6 py-3">

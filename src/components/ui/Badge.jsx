@@ -7,7 +7,7 @@ export function Badge({ children, variant = 'neutral', className = '' }) {
     good: 'badge-good',
     medium: 'badge-medium',
     low: 'badge-low',
-    brand: 'bg-brand-50 text-brand-700',
+    brand: 'bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-300',
   }[variant] || 'badge-neutral';
 
   return <span className={clsx(variantClass, className)}>{children}</span>;

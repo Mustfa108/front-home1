@@ -58,10 +58,10 @@ export default function AdminLogin() {
         </div>
 
         <div className="card-padded animate-slide-up">
-          <h2 className="text-center text-lg font-bold text-slate-900">
+          <h2 className="text-center text-lg font-bold text-slate-900 dark:text-slate-100">
             تسجيل دخول المدير
           </h2>
-          <p className="mt-1 text-center text-xs text-slate-500">
+          <p className="mt-1 text-center text-xs text-slate-500 dark:text-slate-400">
             هذه اللوحة مخصصة لمديري النظام فقط
           </p>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>

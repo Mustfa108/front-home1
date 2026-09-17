@@ -92,15 +92,15 @@ export default function AdminAssessmentVersions() {
                 <CardBody>
                   <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                     <div>
-                      <p className="font-bold text-slate-800">
+                      <p className="font-bold text-slate-800 dark:text-slate-100">
                         الإصدار {v.version_number}
                         <span className={`${status.cls} mr-2`}>{status.label}</span>
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         {v.axes_count} محور — {v.questions_count} سؤال
                         {v.published_at ? ` — نُشر في ${formatDate(v.published_at)}` : ''}
                       </p>
-                      {v.notes_ar && <p className="mt-1 text-xs text-slate-600">{v.notes_ar}</p>}
+                      {v.notes_ar && <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{v.notes_ar}</p>}
                     </div>
                     <div className="flex items-center gap-2">
                       {v.status === 'draft' && (

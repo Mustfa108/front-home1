@@ -66,27 +66,27 @@ export default function AdminAssessmentDetail() {
             </div>
 
             <div className="md:col-span-2">
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {a.user_name}
               </h2>
-              <div className="mt-2 space-y-1 text-sm text-slate-600">
+              <div className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
                 {a.organization_name && (
                   <p className="flex items-center gap-1">
                     <Building2 size={14} className="text-slate-400" />
                     {a.organization_name}
                   </p>
                 )}
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   رقم التقييم #{a.id} • {formatDate(a.created_at)}
                 </p>
               </div>
               {a.ai_summary_ar && (
-                <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <h3 className="mb-1 flex items-center gap-1 text-sm font-bold text-slate-700">
+                <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                  <h3 className="mb-1 flex items-center gap-1 text-sm font-bold text-slate-700 dark:text-slate-200">
                     <Sparkles size={14} className="text-brand-600" />
                     ملخص ذكي
                   </h3>
-                  <p className="text-sm leading-7 text-slate-700">
+                  <p className="text-sm leading-7 text-slate-700 dark:text-slate-200">
                     {a.ai_summary_ar}
                   </p>
                 </div>
@@ -120,8 +120,8 @@ export default function AdminAssessmentDetail() {
         <CardHeader title="نتائج المحاور" />
         <CardBody className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+            <table className="admin-table">
+              <thead>
                 <tr>
                   <th className="px-6 py-3 text-right font-semibold">المحور</th>
                   <th className="px-6 py-3 text-right font-semibold">الدرجة</th>
@@ -133,19 +133,16 @@ export default function AdminAssessmentDetail() {
                 {pillars.map((p) => {
                   const cfg = readinessFromScore(Number(p.percentage) || 0);
                   return (
-                    <tr
-                      key={p.pillar_id}
-                      className="border-t border-slate-100"
-                    >
-                      <td className="px-6 py-3 font-semibold text-slate-800">
+                    <tr key={p.pillar_id}>
+                      <td className="px-6 py-3 font-semibold text-slate-800 dark:text-slate-100">
                         {p.pillar_name_ar}
                       </td>
-                      <td className="px-6 py-3 text-slate-600">
+                      <td className="px-6 py-3 text-slate-600 dark:text-slate-300">
                         {p.raw_score} / {p.max_score}
                       </td>
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="h-2 w-24 overflow-hidden rounded-full bg-slate-100">
+                          <div className="h-2 w-24 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                             <div
                               className="h-full rounded-full"
                               style={{
@@ -154,7 +151,7 @@ export default function AdminAssessmentDetail() {
                               }}
                             />
                           </div>
-                          <span className="font-bold text-slate-700">
+                          <span className="font-bold text-slate-700 dark:text-slate-200">
                             {formatScore(p.percentage)}
                           </span>
                         </div>
