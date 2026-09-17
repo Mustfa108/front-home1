@@ -34,6 +34,7 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 ## Recent major changes
 
 - Assessment charts (bar/radar/donut) follow light/dark CSS tokens via `useChartTheme`
+- Results AI analysis cards and chat bubbles follow dark theme; chat pane is taller and auto-scrolls to the latest message
 - Results table, scores, and percentages are readable in dark mode; `formatScore` uses Arabic decimal + percent
 - Assessment questionnaire progress/notes/dots use dark surfaces; question title no longer clipped
 - Generic Laravel `Server Error` is mapped to Arabic; AI generate/chat/project-review requests use a 90s timeout

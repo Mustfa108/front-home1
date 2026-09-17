@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bot, CheckCircle2, RefreshCw, Sparkles, AlertTriangle, Info } from 'lucide-react';
 import { useAsync } from '../../hooks/useAsync';
@@ -120,26 +120,26 @@ export function AiAnalysisSection({ assessmentId }) {
             )}
 
             {/* Project Summary Card */}
-            <div className="rounded-xl bg-gradient-to-br from-brand-50 to-white border border-brand-100 p-5 shadow-sm">
-              <h4 className="flex items-center gap-2 text-base font-bold text-brand-800 mb-3">
-                <Bot size={20} className="text-brand-600" />
+            <div className="rounded-xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-5 shadow-sm dark:border-brand-800 dark:from-brand-950/40 dark:to-slate-900">
+              <h4 className="mb-3 flex items-center gap-2 text-base font-bold text-brand-800 dark:text-brand-200">
+                <Bot size={20} className="text-brand-600 dark:text-brand-300" />
                 ملخص المشروع
               </h4>
-              <p className="text-sm leading-8 text-slate-700">{analysis.overall_summary}</p>
+              <p className="text-sm leading-8 text-slate-700 dark:text-slate-200">{analysis.overall_summary}</p>
             </div>
 
             {/* Strengths & Weaknesses Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {analysis.strengths?.length > 0 && (
-                <div className="rounded-xl bg-emerald-50 border border-emerald-100 p-5">
-                  <h4 className="flex items-center gap-2 text-sm font-bold text-emerald-800 mb-3">
-                    <CheckCircle2 size={16} className="text-emerald-600" />
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-5 dark:border-emerald-800 dark:bg-emerald-950/30">
+                  <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-emerald-800 dark:text-emerald-200">
+                    <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400" />
                     مميزات المشروع
                   </h4>
                   <ul className="space-y-2">
                     {analysis.strengths.map((s, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
                         {s}
                       </li>
                     ))}
@@ -148,15 +148,15 @@ export function AiAnalysisSection({ assessmentId }) {
               )}
 
               {analysis.weaknesses?.length > 0 && (
-                <div className="rounded-xl bg-amber-50 border border-amber-100 p-5">
-                  <h4 className="flex items-center gap-2 text-sm font-bold text-amber-800 mb-3">
-                    <AlertTriangle size={16} className="text-amber-600" />
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-5 dark:border-amber-800 dark:bg-amber-950/30">
+                  <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-amber-800 dark:text-amber-200">
+                    <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400" />
                     جوانب تحتاج إلى تحسين
                   </h4>
                   <ul className="space-y-2">
                     {analysis.weaknesses.map((w, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
                         {w}
                       </li>
                     ))}
@@ -167,8 +167,8 @@ export function AiAnalysisSection({ assessmentId }) {
 
             {/* Next Steps */}
             {analysis.recommendations?.length > 0 && (
-              <div className="rounded-xl bg-white border border-slate-200 p-5 shadow-sm">
-                <h4 className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-4">
+              <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                <h4 className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-800 dark:text-slate-100">
                   <Sparkles size={16} className="text-brand-600" />
                   الخطوات المثالية القادمة
                 </h4>
@@ -179,12 +179,12 @@ export function AiAnalysisSection({ assessmentId }) {
                         {i + 1}
                       </span>
                       <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="font-bold text-slate-800">{r.title}</span>
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <span className="font-bold text-slate-800 dark:text-slate-100">{r.title}</span>
                           {r.timeframe_ar && <span className="badge-neutral">{r.timeframe_ar}</span>}
                           {r.related_axis && <span className="badge-medium">{r.related_axis}</span>}
                         </div>
-                        <p className="leading-7 text-slate-600">{r.description}</p>
+                        <p className="leading-7 text-slate-600 dark:text-slate-300">{r.description}</p>
                       </div>
                     </li>
                   ))}
@@ -193,17 +193,17 @@ export function AiAnalysisSection({ assessmentId }) {
             )}
 
             {analysis.priorities?.length > 0 && (
-              <div className="rounded-xl bg-slate-50 border border-slate-200 p-5">
-                <h4 className="text-sm font-bold text-slate-800 mb-3">الأولويات</h4>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800/60">
+                <h4 className="mb-3 text-sm font-bold text-slate-800 dark:text-slate-100">الأولويات</h4>
                 <ul className="space-y-2">
                   {analysis.priorities.map((p, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                         {i + 1}
                       </span>
-                      <span className="font-bold text-slate-800">{p.axis}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-100">{p.axis}</span>
                       <span className="badge-medium">{p.priority}</span>
-                      <p className="text-slate-600">{p.reason}</p>
+                      <p className="text-slate-600 dark:text-slate-300">{p.reason}</p>
                     </li>
                   ))}
                 </ul>
@@ -211,9 +211,9 @@ export function AiAnalysisSection({ assessmentId }) {
             )}
 
             {analysis.progress_summary && (
-              <div className="rounded-xl bg-brand-50 border border-brand-100 p-4">
-                <h4 className="text-sm font-bold text-brand-800">مقارنة مع التقييم السابق</h4>
-                <p className="mt-1 text-sm leading-7 text-brand-900">{analysis.progress_summary}</p>
+              <div className="rounded-xl border border-brand-100 bg-brand-50 p-4 dark:border-brand-800 dark:bg-brand-950/30">
+                <h4 className="text-sm font-bold text-brand-800 dark:text-brand-200">مقارنة مع التقييم السابق</h4>
+                <p className="mt-1 text-sm leading-7 text-brand-900 dark:text-brand-100">{analysis.progress_summary}</p>
               </div>
             )}
 
@@ -258,6 +258,7 @@ export function AiChatWidget({ assessmentId }) {
   const [sending, setSending] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [historyError, setHistoryError] = useState(null);
+  const listRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -275,6 +276,12 @@ export function AiChatWidget({ assessmentId }) {
       mounted = false;
     };
   }, [assessmentId]);
+
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }, [messages, sending, loaded]);
 
   const send = async (text) => {
     const message = (text ?? input).trim();
@@ -332,7 +339,7 @@ export function AiChatWidget({ assessmentId }) {
                 type="button"
                 onClick={() => send(q)}
                 disabled={sending}
-                className="rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1.5 text-xs font-semibold text-brand-700 transition hover:bg-brand-100 disabled:opacity-50"
+                className="rounded-full border border-brand-200 bg-brand-50 px-3.5 py-1.5 text-xs font-semibold text-brand-700 transition hover:bg-brand-100 disabled:opacity-50 dark:border-brand-800 dark:bg-brand-950 dark:text-brand-200 dark:hover:bg-brand-900"
               >
                 {q}
               </button>
@@ -340,7 +347,10 @@ export function AiChatWidget({ assessmentId }) {
           </div>
         )}
 
-        <div className="max-h-80 space-y-3 overflow-y-auto rounded-xl bg-slate-50 p-3">
+        <div
+          ref={listRef}
+          className="min-h-[28rem] max-h-[32rem] space-y-3 overflow-y-auto rounded-xl bg-slate-50 p-3 dark:bg-slate-800/60"
+        >
           {messages.map((m, index) => (
             <div
               key={m.id || `${m.role}-${index}`}
@@ -349,7 +359,7 @@ export function AiChatWidget({ assessmentId }) {
               <div
                 className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-7 ${
                   m.role === 'user'
-                    ? 'bg-white text-slate-800 shadow-sm'
+                    ? 'bg-white text-slate-800 shadow-sm dark:bg-slate-700 dark:text-slate-100'
                     : 'bg-brand-600 text-white'
                 }`}
               >
