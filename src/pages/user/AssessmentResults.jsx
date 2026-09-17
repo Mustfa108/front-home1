@@ -171,8 +171,8 @@ export default function AssessmentResults() {
           <CardBody>
             <p className="text-sm text-amber-800 dark:text-amber-200">
               {locale === 'en'
-                ? 'AI or PDF generation is taking longer than expected. You can refresh or regenerate the PDF from the button above.'
-                : 'توليد الذكاء الاصطناعي أو ملف PDF يستغرق وقتًا أطول من المتوقع. يمكنك التحديث أو الضغط على «تجهيز PDF».'}
+                ? 'AI summary or PDF is taking longer than expected. The smart summary needs a running queue worker and a valid Gemini key on the server. You can refresh now or regenerate the PDF.'
+                : 'توليد الملخص الذكي أو ملف PDF يستغرق وقتًا أطول من المتوقع. الملخص الذكي يعتمد على تشغيل عامل الطابور (queue worker) ومفتاح Gemini الصحيح على السيرفر. يمكنك التحديث الآن أو إعادة تجهيز PDF.'}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button variant="secondary" onClick={refresh} leftIcon={<RefreshCw size={16} />}>
@@ -222,12 +222,28 @@ export default function AssessmentResults() {
                 )}
               </div>
               {assessment.ai_summary_ar ? (
-                <p className="text-sm leading-8 text-slate-700">
+                <p className="text-sm leading-8 text-slate-700 dark:text-slate-200">
                   {assessment.ai_summary_ar}
                 </p>
+              ) : exhausted && !assessment.ai_ready ? (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+                  <p className="font-semibold">
+                    {locale === 'en' ? 'Smart summary is still unavailable' : 'الملخص الذكي لم يكتمل بعد'}
+                  </p>
+                  <p className="mt-1 text-amber-700 dark:text-amber-300">
+                    {locale === 'en'
+                      ? 'This summary is generated in the background after you submit. If it stays pending, the API host may need a running queue worker (`php artisan queue:work`) and a valid Gemini key (admin settings or `.env`).'
+                      : 'يُولَّد هذا الملخص في الخلفية بعد إرسال التقييم. إذا بقي معلّقاً، غالباً يحتاج السيرفر لتشغيل عامل الطابور (`php artisan queue:work`) ومفتاح Gemini صالح (من إعدادات الأدمن أو `.env`).'}
+                  </p>
+                  <Button variant="secondary" className="mt-3" onClick={refresh} leftIcon={<RefreshCw size={14} />}>
+                    {locale === 'en' ? 'Check again' : 'تحقق مجدداً'}
+                  </Button>
+                </div>
               ) : (
-                <p className="text-sm text-slate-500">
-                  {t('results.aiPending')}
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {locale === 'en'
+                    ? 'Generating your smart summary in the background… This is not a button; the page refreshes automatically.'
+                    : 'جاري توليد الملخص الذكي في الخلفية… هذا عرض فقط (وليس زراً)، وتُحدَّث الصفحة تلقائياً.'}
                 </p>
               )}
             </div>

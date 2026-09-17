@@ -94,11 +94,16 @@ export function AiAnalysisSection({ assessmentId }) {
             </Button>
           </div>
         ) : data?.status === 'none' ? (
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/50">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
             <div className="flex items-start gap-3">
               <Info size={18} className="mt-0.5 shrink-0 text-slate-500" />
               <div>
-                <p>يجب إكمال بيانات المنظمة (النوع والحجم) في الملف الشخصي قبل إنشاء التوصيات المخصصة.</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-100">
+                  أكمل بروفايل منظمتك لتفعيل التحليل الذكي
+                </p>
+                <p className="mt-1">
+                  يجب إكمال نوع المنظمة وحجمها في الملف الشخصي قبل إنشاء التوصيات المخصصة. بدونها لن يُرسل طلب التوليد.
+                </p>
                 <Link to="/profile?onboarding=1" className="mt-3 inline-flex text-sm font-semibold text-brand-600 hover:underline">
                   إكمال الملف الشخصي
                 </Link>
@@ -216,7 +221,20 @@ export function AiAnalysisSection({ assessmentId }) {
               تنبيه: التوصيات استرشادية وليست بديلاً عن التقييم المهني المتخصص.
             </p>
           </div>
-        ) : null}
+        ) : (
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+            <div className="flex items-start gap-3">
+              <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+              <div>
+                <p className="font-semibold text-slate-800 dark:text-slate-100">لا يوجد محتوى تحليل للعرض</p>
+                <p className="mt-1">حاول إعادة التوليد، أو تحقق لاحقاً إذا كانت خدمة الذكاء الاصطناعي غير متاحة.</p>
+                <Button variant="secondary" className="mt-3" onClick={handleRetry} loading={retrying} leftIcon={<RefreshCw size={14} />}>
+                  إعادة المحاولة
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </CardBody>
     </Card>
   );
@@ -239,13 +257,19 @@ export function AiChatWidget({ assessmentId }) {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [historyError, setHistoryError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
+    setHistoryError(null);
     aiApi
       .chatHistory(assessmentId)
       .then((res) => mounted && setMessages(res.data?.messages || []))
-      .catch(() => {})
+      .catch((err) => {
+        if (mounted) {
+          setHistoryError(err?.message || 'تعذّر تحميل سجل المحادثة.');
+        }
+      })
       .finally(() => mounted && setLoaded(true));
     return () => {
       mounted = false;
@@ -254,7 +278,15 @@ export function AiChatWidget({ assessmentId }) {
 
   const send = async (text) => {
     const message = (text ?? input).trim();
-    if (!message || sending) return;
+    if (sending) return;
+    if (!message) {
+      toast.error('اكتب سؤالاً قبل الإرسال.');
+      return;
+    }
+    if (message.length < 3) {
+      toast.error('السؤال قصير جداً (٣ أحرف على الأقل).');
+      return;
+    }
     if (message.length > 500) {
       toast.error('الحد الأقصى لطول السؤال 500 حرف.');
       return;
@@ -287,6 +319,11 @@ export function AiChatWidget({ assessmentId }) {
         subtitle="مساعد ذكي يجيب حصراً عن نتيجة تقييمك وخطة تطويرك"
       />
       <CardBody className="space-y-3">
+        {historyError && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+            {historyError} يمكنك المتابعة وطرح سؤال جديد.
+          </div>
+        )}
         {messages.length === 0 && loaded && (
           <div className="flex flex-wrap gap-2">
             {SUGGESTED_QUESTIONS.map((q) => (

@@ -34,6 +34,7 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 - Dashboard visual polish (hero score band, clearer AI summary) within brand identity
 - Org profile soft gate on assessment / project review / dashboard
 - Clearer AI and community-chat error messages (CORS / Gemini / rate limits)
+- Results page: clearer pending/exhausted messaging for smart summary (queue + Gemini), stronger org-gate copy for analysis, chat history/send validation toasts
 - AiChatWidget stable message keys; login/register autocomplete fields
 - Community chat RTL bubble alignment (`mine` → `justify-end`)
 
