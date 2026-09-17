@@ -1,19 +1,34 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Activity } from 'lucide-react';
 
 const STORAGE_KEY = 'humascale_splash_seen';
 
 /**
  * Animated welcome splash — shown once per browser session.
- * Plays a logo + wordmark + tagline choreography, then slides away.
+ * Skipped on admin routes; marks session as seen so it won't flash later.
  * Respects prefers-reduced-motion via CSS in index.css.
  */
 export default function SplashScreen() {
-  const [phase, setPhase] = useState(() =>
-    typeof window !== 'undefined' && sessionStorage.getItem(STORAGE_KEY)
-      ? 'done'
-      : 'enter',
-  );
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  const [phase, setPhase] = useState(() => {
+    if (typeof window === 'undefined') return 'done';
+    if (sessionStorage.getItem(STORAGE_KEY)) return 'done';
+    // Admin routes skip animation; flag is set in effect below.
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+      return 'done';
+    }
+    return 'enter';
+  });
+
+  useEffect(() => {
+    if (!isAdminRoute) return undefined;
+    sessionStorage.setItem(STORAGE_KEY, '1');
+    if (phase !== 'done') setPhase('done');
+    return undefined;
+  }, [isAdminRoute, phase]);
 
   useEffect(() => {
     if (phase !== 'enter') return undefined;
@@ -30,7 +45,7 @@ export default function SplashScreen() {
     };
   }, [phase]);
 
-  if (phase === 'done') return null;
+  if (isAdminRoute || phase === 'done') return null;
 
   const exiting = phase === 'exit';
 
