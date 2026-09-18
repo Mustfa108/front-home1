@@ -32,7 +32,7 @@ export function AiAnalysisSection({ assessmentId }) {
     aiApi
       .generateAnalysis(assessmentId)
       .then((res) => {
-        if (mounted) setData(res.data);
+        if (mounted) setData(res.data ?? res);
       })
       .catch((err) => {
         if (mounted) {
@@ -55,8 +55,8 @@ export function AiAnalysisSection({ assessmentId }) {
     setRetrying(true);
     setGenerateError(null);
     try {
-      const res = await aiApi.generateAnalysis(assessmentId);
-      setData(res.data);
+      const res = await aiApi.generateAnalysis(assessmentId, { force: Boolean(isFallback) });
+      setData(res.data ?? res);
     } catch (err) {
       const msg = err?.message || 'تعذر إنشاء التحليل الذكي حالياً، يمكنك المحاولة لاحقاً';
       setGenerateError(msg);
@@ -113,9 +113,14 @@ export function AiAnalysisSection({ assessmentId }) {
         ) : analysis ? (
           <div className="space-y-6">
             {isFallback && (
-              <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-                <Info size={14} className="mt-0.5 shrink-0" />
-                هذا تحليل مبسط مبني على قواعد النظام (تعذر الاتصال بخدمة الذكاء الاصطناعي أو مفتاح Gemini غير مضبوط). يمكنك المحاولة لاحقاً للحصول على تحليل موسع.
+              <div className="space-y-3">
+                <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+                  <Info size={14} className="mt-0.5 shrink-0" />
+                  هذا تحليل مبسط مبني على قواعد النظام (تعذر الاتصال بخدمة الذكاء الاصطناعي أو مفتاح Gemini غير مضبوط أو فشل تحليل الرد). يمكنك إعادة المحاولة للحصول على تحليل موسع.
+                </div>
+                <Button variant="secondary" onClick={handleRetry} loading={retrying} leftIcon={<RefreshCw size={14} />}>
+                  إعادة توليد تحليل ذكي موسّع
+                </Button>
               </div>
             )}
 

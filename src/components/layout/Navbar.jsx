@@ -161,9 +161,9 @@ function UserMenu() {
           <div className="absolute start-0 z-40 mt-2 w-56 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-card animate-fade-in dark:border-slate-700 dark:bg-slate-900">
             <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
               <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{user?.name}</p>
-              <p className="truncate text-xs text-slate-500">{user?.email}</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
               {user?.organization_name && (
-                <p className="mt-1 truncate text-xs text-slate-500">
+                <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
                   {user.organization_name}
                 </p>
               )}
@@ -196,7 +196,6 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const navItems = useNavItems();
-  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
@@ -220,27 +219,51 @@ export function Navbar() {
           <NotificationsBell onNavigate={(p) => navigate(p)} />
           <UserMenu />
           <button
-            className="rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden dark:hover:bg-slate-800"
-            onClick={() => setMobileOpen((o) => !o)}
-            aria-label={t('nav.dashboard')}
+            className="rounded-full p-2 text-slate-500 hover:bg-slate-100 md:hidden dark:text-slate-300 dark:hover:bg-slate-800"
+            onClick={() => setMobileOpen(true)}
+            aria-label="فتح القائمة"
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            <Menu size={20} />
           </button>
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className="border-t border-slate-200 bg-white md:hidden dark:border-slate-800 dark:bg-slate-950">
-          <nav className="container-page flex flex-col gap-1 py-3">
-            {navItems.map((n) => (
-              <NavItem
-                key={n.to}
-                {...n}
-                onClick={() => setMobileOpen(false)}
-              />
-            ))}
-          </nav>
+      {/* Mobile side drawer (RTL: from the right) */}
+      <div
+        className={clsx(
+          'fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col border-s border-slate-200 bg-white shadow-xl transition-transform duration-300 md:hidden dark:border-slate-800 dark:bg-slate-950',
+          mobileOpen ? 'translate-x-0' : 'translate-x-full',
+        )}
+        aria-hidden={!mobileOpen}
+      >
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+          <span className="text-sm font-bold text-slate-900 dark:text-white">القائمة</span>
+          <button
+            type="button"
+            className="rounded-full p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            onClick={() => setMobileOpen(false)}
+            aria-label="إغلاق القائمة"
+          >
+            <X size={20} />
+          </button>
         </div>
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+          {navItems.map((n) => (
+            <NavItem
+              key={n.to}
+              {...n}
+              onClick={() => setMobileOpen(false)}
+            />
+          ))}
+        </nav>
+      </div>
+
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden
+        />
       )}
     </header>
   );

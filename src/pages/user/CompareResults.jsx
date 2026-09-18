@@ -64,7 +64,7 @@ export default function CompareResults() {
 
   const { first, second, overall, axes, improved_axes, declined_axes, unchanged_axes, most_improved, most_declined } = data;
   const overallCls =
-    overall.direction === 'improved' ? 'text-emerald-600' : overall.direction === 'declined' ? 'text-red-600' : 'text-slate-600';
+    overall.direction === 'improved' ? 'text-emerald-600 dark:text-emerald-400' : overall.direction === 'declined' ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-300';
 
   return (
     <PageContainer>
@@ -84,12 +84,12 @@ export default function CompareResults() {
         <CardBody>
           <div className="grid items-center gap-6 text-center md:grid-cols-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">التقييم السابق #{first.id}</p>
-              <p className="mt-1 text-5xl font-extrabold text-slate-700">{formatScore(overall.first_score, 1)}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">التقييم السابق #{first.id}</p>
+              <p className="mt-1 text-5xl font-extrabold text-slate-700 dark:text-slate-100">{formatScore(overall.first_score, 1)}</p>
               <div className="mt-2"><ReadinessBadge level={first.readiness_level} /></div>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">مقدار التحسن / التراجع</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">مقدار التحسن / التراجع</p>
               <p className={`mt-1 text-5xl font-extrabold ${overallCls}`}>
                 {overall.difference > 0 ? '+' : ''}{formatScore(overall.difference, 1)}
               </p>
@@ -100,8 +100,8 @@ export default function CompareResults() {
               )}
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">التقييم الحالي #{second.id}</p>
-              <p className="mt-1 text-5xl font-extrabold text-brand-700">{formatScore(overall.second_score, 1)}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">التقييم الحالي #{second.id}</p>
+              <p className="mt-1 text-5xl font-extrabold text-brand-700 dark:text-brand-300">{formatScore(overall.second_score, 1)}</p>
               <div className="mt-2"><ReadinessBadge level={second.readiness_level} /></div>
             </div>
           </div>
@@ -117,12 +117,12 @@ export default function CompareResults() {
               أكثر محور تحسناً
             </h4>
             {most_improved ? (
-              <p className="mt-2 text-sm text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-200">
                 <span className="font-bold">{most_improved.pillar_name_ar}</span> — تحسن بمقدار{' '}
-                <span className="font-bold text-emerald-600">+{formatScore(most_improved.difference)}</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">+{formatScore(most_improved.difference)}</span>
               </p>
             ) : (
-              <p className="mt-2 text-sm text-slate-500">لا يوجد تحسن في أي محور.</p>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">لا يوجد تحسن في أي محور.</p>
             )}
           </CardBody>
         </Card>
@@ -133,12 +133,12 @@ export default function CompareResults() {
               أكثر محور تراجعاً
             </h4>
             {most_declined ? (
-              <p className="mt-2 text-sm text-slate-700">
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-200">
                 <span className="font-bold">{most_declined.pillar_name_ar}</span> — تراجع بمقدار{' '}
-                <span className="font-bold text-red-600">{formatScore(most_declined.difference)}</span>
+                <span className="font-bold text-red-600 dark:text-red-400">{formatScore(most_declined.difference)}</span>
               </p>
             ) : (
-              <p className="mt-2 text-sm text-slate-500">لا يوجد تراجع في أي محور.</p>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">لا يوجد تراجع في أي محور.</p>
             )}
           </CardBody>
         </Card>
@@ -149,7 +149,7 @@ export default function CompareResults() {
         <CardBody className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <thead className="bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300">
                 <tr>
                   <th className="px-4 py-3 text-right font-semibold">المحور</th>
                   <th className="px-4 py-3 text-center font-semibold">#{first.id}</th>
@@ -161,17 +161,17 @@ export default function CompareResults() {
                 {axes.map((axis) => (
                   <tr
                     key={axis.pillar_id}
-                    className={`border-t border-slate-100 transition hover:bg-slate-50 ${
+                    className={`border-t border-slate-100 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900/60 ${
                       axis.change === 'improved'
-                        ? 'bg-emerald-50/40'
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20'
                         : axis.change === 'declined'
-                          ? 'bg-red-50/40'
+                          ? 'bg-red-50/40 dark:bg-red-950/20'
                           : ''
                     }`}
                   >
-                    <td className="px-4 py-3 font-semibold text-slate-800">{axis.pillar_name_ar}</td>
-                    <td className="px-4 py-3 text-center text-slate-600">{formatScore(axis.first_percentage ?? 0)}</td>
-                    <td className="px-4 py-3 text-center font-bold text-slate-800">{formatScore(axis.second_percentage ?? 0)}</td>
+                    <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-100">{axis.pillar_name_ar}</td>
+                    <td className="px-4 py-3 text-center text-slate-600 dark:text-slate-300">{formatScore(axis.first_percentage ?? 0)}</td>
+                    <td className="px-4 py-3 text-center font-bold text-slate-800 dark:text-slate-100">{formatScore(axis.second_percentage ?? 0)}</td>
                     <td className="px-4 py-3 text-center">
                       <ChangeBadge change={axis.change} difference={axis.difference} differencePercent={axis.difference_percent} />
                     </td>
@@ -188,33 +188,33 @@ export default function CompareResults() {
         <Card>
           <CardBody>
             <h4 className="text-sm font-bold text-emerald-700">محاور تحسنت ({improved_axes.length})</h4>
-            <ul className="mt-2 space-y-1 text-sm text-slate-600">
+            <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
               {improved_axes.map((a) => (
                 <li key={a.pillar_id}>{a.pillar_name_ar} (+{formatScore(a.difference)})</li>
               ))}
-              {improved_axes.length === 0 && <li className="text-slate-400">—</li>}
+              {improved_axes.length === 0 && <li className="text-slate-400 dark:text-slate-500">—</li>}
             </ul>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
-            <h4 className="text-sm font-bold text-red-700">محاور تراجعت ({declined_axes.length})</h4>
-            <ul className="mt-2 space-y-1 text-sm text-slate-600">
+            <h4 className="text-sm font-bold text-red-700 dark:text-red-400">محاور تراجعت ({declined_axes.length})</h4>
+            <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
               {declined_axes.map((a) => (
                 <li key={a.pillar_id}>{a.pillar_name_ar} ({formatScore(a.difference)})</li>
               ))}
-              {declined_axes.length === 0 && <li className="text-slate-400">—</li>}
+              {declined_axes.length === 0 && <li className="text-slate-400 dark:text-slate-500">—</li>}
             </ul>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
-            <h4 className="text-sm font-bold text-slate-700">محاور لم تتغير ({unchanged_axes.length})</h4>
-            <ul className="mt-2 space-y-1 text-sm text-slate-600">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200">محاور لم تتغير ({unchanged_axes.length})</h4>
+            <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
               {unchanged_axes.map((a) => (
                 <li key={a.pillar_id}>{a.pillar_name_ar}</li>
               ))}
-              {unchanged_axes.length === 0 && <li className="text-slate-400">—</li>}
+              {unchanged_axes.length === 0 && <li className="text-slate-400 dark:text-slate-500">—</li>}
             </ul>
           </CardBody>
         </Card>

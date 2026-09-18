@@ -20,8 +20,10 @@ export const resultsApi = {
    ============================================================ */
 export const aiApi = {
   getAnalysis: (id) => userApi.get(`/assessments/${id}/ai-analysis`).then((r) => r.data),
-  generateAnalysis: (id) =>
-    userApi.post(`/assessments/${id}/ai-analysis`, null, { timeout: AI_TIMEOUT_MS }).then((r) => r.data),
+  generateAnalysis: (id, { force = false } = {}) =>
+    userApi
+      .post(`/assessments/${id}/ai-analysis`, force ? { force: true } : {}, { timeout: AI_TIMEOUT_MS })
+      .then((r) => r.data),
   chat: (id, message) =>
     userApi.post(`/assessments/${id}/ai-chat`, { message }, { timeout: AI_TIMEOUT_MS }).then((r) => r.data),
   chatHistory: (id) => userApi.get(`/assessments/${id}/ai-chat`).then((r) => r.data),

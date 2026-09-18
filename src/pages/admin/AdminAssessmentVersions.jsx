@@ -40,7 +40,7 @@ export default function AdminAssessmentVersions() {
     );
   }
 
-  const d = data?.data || {};
+  const d = data || {};
   const versions = d.versions || [];
 
   const createDraft = async () => {

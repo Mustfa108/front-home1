@@ -85,7 +85,7 @@ export default function AdminStatistics() {
     );
   }
 
-  const d = data?.data || {};
+  const d = data || {};
 
   return (
     <AdminLayout>

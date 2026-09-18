@@ -345,7 +345,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
       <Card>
         <CardHeader title="الملخص الكامل للمشروع" subtitle="شرح مفصّل بالذكاء الاصطناعي بعد إجاباتك" />
         <CardBody>
-          <p className="leading-8 text-slate-700 whitespace-pre-line">{review.full_summary || review.ai_summary_ar}</p>
+          <p className="leading-8 text-slate-700 dark:text-slate-200 whitespace-pre-line">{review.full_summary || review.ai_summary_ar}</p>
         </CardBody>
       </Card>
 
@@ -353,7 +353,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
         <Card>
           <CardHeader title="أهداف المشروع" action={<Target size={16} className="text-brand-600" />} />
           <CardBody>
-            <ul className="space-y-2 text-sm text-slate-700">
+            <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-200">
               {goals.length === 0 && <li className="text-slate-500">لا توجد أهداف مُولَّدة بعد.</li>}
               {goals.map((item, index) => (
                 <li key={`${item}-${index}`} className="flex gap-2 rounded-xl bg-teal-50/80 px-3 py-2">
@@ -367,7 +367,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
         <Card>
           <CardHeader title="ميزات المشروع" action={<Star size={16} className="text-brand-600" />} />
           <CardBody>
-            <ul className="space-y-2 text-sm text-slate-700">
+            <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-200">
               {features.length === 0 && <li className="text-slate-500">لا توجد ميزات مُولَّدة بعد.</li>}
               {features.map((item, index) => (
                 <li key={`${item}-${index}`} className="flex gap-2 rounded-xl bg-brand-50/70 px-3 py-2">
@@ -386,7 +386,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
               {howItWorks.map((item, index) => (
                 <li key={`${item}-${index}`} className="flex gap-3">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-sm font-bold text-indigo-700">{index + 1}</span>
-                  <span className="pt-1 text-sm leading-6 text-slate-700">{item}</span>
+                  <span className="pt-1 text-sm leading-6 text-slate-700 dark:text-slate-200">{item}</span>
                 </li>
               ))}
             </ol>
@@ -402,7 +402,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
             {idealSteps.map((item, index) => (
               <li key={`${item}-${index}`} className="flex gap-3">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-sm font-bold text-teal-700">{index + 1}</span>
-                <span className="pt-1 text-sm leading-6 text-slate-700">{item}</span>
+                <span className="pt-1 text-sm leading-6 text-slate-700 dark:text-slate-200">{item}</span>
               </li>
             ))}
           </ol>
@@ -413,7 +413,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
         <Card>
           <CardHeader title="القراءة التنفيذية" subtitle="تفسير مبني على البيانات التي قدمها فريقك." />
           <CardBody>
-            <p className="leading-8 text-slate-700">{review.ai_summary_ar}</p>
+            <p className="leading-8 text-slate-700 dark:text-slate-200">{review.ai_summary_ar}</p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <InsightList title="ما يدعم المشروع" items={review.strengths} icon={<CheckCircle2 size={17} />} tone="good" />
               <InsightList title="ما يحتاج تحققاً" items={review.risks} icon={<AlertTriangle size={17} />} tone="risk" />
@@ -428,7 +428,7 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
               {recommendations.map((item, index) => (
                 <li key={`${item}-${index}`} className="flex gap-3">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-100 text-sm font-bold text-brand-700">{index + 1}</span>
-                  <span className="pt-1 text-sm leading-6 text-slate-700">{item}</span>
+                  <span className="pt-1 text-sm leading-6 text-slate-700 dark:text-slate-200">{item}</span>
                 </li>
               ))}
             </ol>
@@ -454,10 +454,10 @@ function ReviewResult({ review, chatText, setChatText, sendChat, chatLoading }) 
             )}
             {messages.map((message) => (
               <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                <span className={`rounded-xl p-2 ${message.role === 'user' ? 'bg-slate-200 text-slate-700' : 'bg-brand-100 text-brand-700'}`}>
+                <span className={`rounded-xl p-2 ${message.role === 'user' ? 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200' : 'bg-brand-100 text-brand-700 dark:bg-brand-950 dark:text-brand-300'}`}>
                   {message.role === 'user' ? <MessageCircle size={17} /> : <Bot size={17} />}
                 </span>
-                <p className={`max-w-2xl rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === 'user' ? 'bg-white text-slate-700' : 'bg-brand-50 text-slate-700'}`}>{message.content}</p>
+                <p className={`max-w-2xl rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === 'user' ? 'bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-200' : 'bg-brand-50 text-slate-700 dark:bg-brand-950/40 dark:text-slate-200'}`}>{message.content}</p>
               </div>
             ))}
           </div>

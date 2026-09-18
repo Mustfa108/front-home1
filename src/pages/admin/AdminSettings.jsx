@@ -107,8 +107,12 @@ export default function AdminSettings() {
                 label="اسم النموذج"
                 value={ai.gemini_model || ''}
                 onChange={(e) => setAi((s) => ({ ...s, gemini_model: e.target.value }))}
-                placeholder="gemini-2.0-flash"
+                placeholder="gemini-3.6-flash"
               />
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                النموذج الموصى به حالياً: <code className="text-brand-700 dark:text-brand-300">gemini-3.6-flash</code>
+                — تجنّب النماذج القديمة مثل gemini-1.5-flash أو gemini-2.5-flash (تعيد 404).
+              </p>
               <Button type="submit" loading={savingAi}>حفظ إعدادات الذكاء</Button>
             </form>
           </CardBody>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Layers, PlusCircle } from 'lucide-react';
 import { useAsync } from '../../hooks/useAsync';
 import { useToast } from '../../contexts/ToastContext';
@@ -34,7 +35,7 @@ export default function AdminAxes() {
     );
   }
 
-  const d = data?.data || {};
+  const d = data || {};
   const axes = d.axes || [];
   const editable = d.is_editable;
   const weightReport = d.weight_report;
@@ -94,7 +95,12 @@ export default function AdminAxes() {
           editable ? (
             <Button onClick={openCreate} leftIcon={<PlusCircle size={16} />}>إضافة محور</Button>
           ) : (
-            <span className="badge-neutral">الإصدار منشور — أنشئ مسودة جديدة للتعديل</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="badge-neutral">الإصدار منشور — أنشئ مسودة جديدة للتعديل</span>
+              <Link to="/admin/assessment-versions">
+                <Button variant="secondary">إصدارات الاستبيان</Button>
+              </Link>
+            </div>
           )
         }
       />

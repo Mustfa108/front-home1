@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT — HumaScale Frontend (`front-home1`)
 
-**Last Updated:** 2026-09-17
+**Last Updated:** 2026-09-18
 
 ## Overview
 
@@ -33,25 +33,11 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 
 ## Recent major changes
 
-- Assessment charts (bar/radar/donut) follow light/dark CSS tokens via `useChartTheme`
-- Results AI analysis cards and chat bubbles follow dark theme; chat pane is taller and auto-scrolls to the latest message
-- Results table, scores, and percentages are readable in dark mode; `formatScore` uses Arabic decimal + percent
-- Assessment questionnaire progress/notes/dots use dark surfaces; question title no longer clipped
-- Generic Laravel `Server Error` is mapped to Arabic; AI generate/chat/project-review requests use a 90s timeout
-- Admin pages for statistics, axes, questions, assessment versions, and AI review now use `AdminLayout` instead of user `PageContainer` (which triggered `/notifications` 401 and forced logout)
-- `NotificationsBell` skips the notifications request unless a user token exists
-- `OrgProfileGate` import paths corrected so the SPA can load (`../contexts`, `../utils`, `./ui`)
-- SplashScreen skipped on `/admin/*` and marks session seen so it does not overlay admin pages
-- Admin dark mode: AdminLayout, Card headers, badges, `.admin-table`, and admin page text/surfaces
-- Project review shows amber banner when API returns `is_fallback`
-- Questionnaire versioning (admin): edit only on draft → publish; users get published version; past assessments keep version snapshot
-- Post-login/register redirects to `/profile?onboarding=1` when `org_type`/`org_size` missing; guide opens on profile
-- Dashboard visual polish (hero score band, clearer AI summary) within brand identity
-- Org profile soft gate on assessment / project review / dashboard
-- Clearer AI and community-chat error messages (CORS / Gemini / rate limits)
-- Results page: clearer pending/exhausted messaging for smart summary (queue + Gemini), stronger org-gate copy for analysis, chat history/send validation toasts
-- AiChatWidget stable message keys; login/register autocomplete fields
-- Community chat RTL bubble alignment (`mine` → `justify-end`)
+- 2026-09-18: Fixed admin pages reading `data?.data` after `useAsync`/`unwrapEnvelope` (versions, axes, statistics now show real data + Add Axis)
+- 2026-09-18: User mobile nav is a right-side drawer (desktop keeps top nav); dark-mode polish on ProjectReview / Compare / History
+- 2026-09-18: AI analysis retry with `{ force: true }` when `is_fallback`; AdminSettings recommends `gemini-3.6-flash`
+- Assessment charts follow light/dark CSS tokens via `useChartTheme`
+- Admin pages use `AdminLayout` (avoid user `PageContainer` /notifications 401)
 
 ## Env required
 
@@ -62,8 +48,6 @@ See `.env.example`:
 - `VITE_REVERB_HOST=reverb.sci-syria.org`
 - `VITE_REVERB_PORT=80` (local/default) — production should use `443` + `https`
 - `VITE_REVERB_SCHEME=http` (local) / `https` (production)
-
-Public Reverb URL (prod target): `https://reverb.sci-syria.org/` after DNS + TLS proxy.
 
 ## Run
 
@@ -76,4 +60,5 @@ npm run dev
 
 - CORS requires backend `FRONTEND_URL` match SPA origin
 - Echo realtime needs Reverb DNS/TLS/proxy; REST chat still works without it
-- AI features need Gemini key + org profile + queue worker on API host
+- AI features need Gemini key + model `gemini-3.6-flash` + org profile + queue worker on API host
+- Rotate any Gemini key that appeared in server logs

@@ -80,15 +80,15 @@ export default function History() {
                       {Math.round(a.overall_score)}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                         تقييم رقم #{a.id}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         {formatDate(a.created_at)}
                       </p>
                       <div className="mt-2 flex flex-wrap items-center gap-2">
                         <ReadinessBadge level={a.readiness_level} />
-                        <span className="text-xs font-semibold text-slate-600">
+                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                           {formatScore(a.overall_score, 1)}
                         </span>
                       </div>
