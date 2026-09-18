@@ -110,59 +110,36 @@ export default function AdminSettings() {
                   : 'غير مضبوط — ضع المفتاح هنا أو في ملف البيئة'}
               </p>
 
-              {quota?.active && (
+              {quota?.active ? (
                 <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100">
                   <div className="flex items-start gap-2">
                     <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-300" />
                     <div className="space-y-2">
-                      <p className="font-bold">تنبيه: الحد اليومي / حصة المفتاح مستنفدة</p>
+                      <p className="font-bold">{quota.title_ar || 'تم استنفاد الحد اليومي لمفتاح Gemini'}</p>
                       <p className="leading-7">{quota.message_ar}</p>
-                      <p className="text-xs leading-6 text-amber-800 dark:text-amber-200">{quota.log_hint_ar}</p>
+                      {quota.action_ar && (
+                        <p className="leading-7 text-amber-800 dark:text-amber-200">{quota.action_ar}</p>
+                      )}
                       {quota.hit_at && (
                         <p className="text-xs text-amber-700 dark:text-amber-300">
-                          آخر رصد من اللوج/الاستجابة: {formatDate(quota.hit_at)}
-                          {quota.http_status ? ` — HTTP ${quota.http_status}` : ''}
-                          {quota.error_status ? ` — ${quota.error_status}` : ''}
-                        </p>
-                      )}
-                      {quota.last_error && (
-                        <p className="break-words rounded-lg bg-amber-100/80 p-2 font-mono text-[11px] leading-5 text-amber-950 dark:bg-amber-900/40 dark:text-amber-50">
-                          {quota.last_error}
+                          وقت الرصد: {formatDate(quota.hit_at)}
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
-              )}
-
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs leading-6 text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
-                <div className="mb-1 flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
-                  <Info size={14} />
-                  كيف تعرف من اللوج أن الحصة انتهت؟
+              ) : (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs leading-6 text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                  <div className="mb-1 flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                    <Info size={14} />
+                    ملاحظة عن الحد اليومي
+                  </div>
+                  <p>
+                    المفتاح المجاني له حد يومي للطلبات. عند نفاده يظهر هنا تنبيه تلقائي دون الحاجة لفتح ملفات السيرفر،
+                    وقد يعمل التحليل بشكل مبسّط حتى تُعاد تعبئة الحصة أو تُحدّث المفتاح.
+                  </p>
                 </div>
-                <ul className="list-disc space-y-1 pe-4">
-                  <li>
-                    <code className="text-brand-700 dark:text-brand-300">status: 429</code>
-                    {' '}أو{' '}
-                    <code className="text-brand-700 dark:text-brand-300">RESOURCE_EXHAUSTED</code>
-                  </li>
-                  <li>
-                    رسالة تحتوي{' '}
-                    <code className="text-brand-700 dark:text-brand-300">quota</code>
-                    {' / '}
-                    <code className="text-brand-700 dark:text-brand-300">rate limit</code>
-                    {' / '}
-                    <code className="text-brand-700 dark:text-brand-300">exceeded your current quota</code>
-                  </li>
-                  <li>
-                    خطأ{' '}
-                    <code className="text-brand-700 dark:text-brand-300">503</code>
-                    {' '}مع{' '}
-                    <code className="text-brand-700 dark:text-brand-300">high demand</code>
-                    {' '}≠ حد يومي؛ هو ضغط مؤقت على النموذج
-                  </li>
-                </ul>
-              </div>
+              )}
 
               <Input
                 label="مفتاح Gemini الجديد"
