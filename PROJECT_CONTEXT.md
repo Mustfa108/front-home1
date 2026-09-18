@@ -33,6 +33,7 @@ React + Vite frontend for HumaScale: readiness assessment, AI project review, co
 
 ## Recent major changes
 
+- 2026-09-18: Admin settings shows Gemini daily-quota alert from recorded 429/RESOURCE_EXHAUSTED errors + log-hint copy
 - 2026-09-18: Fixed admin pages reading `data?.data` after `useAsync`/`unwrapEnvelope` (versions, axes, statistics now show real data + Add Axis)
 - 2026-09-18: User mobile nav is a right-side drawer (desktop keeps top nav); dark-mode polish on ProjectReview / Compare / History
 - 2026-09-18: AI analysis retry with `{ force: true }` when `is_fallback`; AdminSettings recommends `gemini-3.6-flash`
